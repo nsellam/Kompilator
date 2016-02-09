@@ -59,16 +59,19 @@ Params : Type tID SuiteParams
 
  Comparateur : tLT | tGT | tLE | tGE | tEGALEGAL;
 
-Expr : tNB tADD tNB { $$ = $1 + $3;}
-     | tNB tSUB tNB { $$ = $1 - $3;}
-     | tNB tMUL tNB { $$ = $1 * $3;}
-     | tNB tDIV tNB { $$ = $1 / $3;}
-     | tNEB tADD tNEB { $$ = $1 + $3;}
-     | tNEB tSUB tNEB { $$ = $1 - $3;}
-     | tNEB tMUL tNEB { $$ = $1 * $3;}
-     | tNEB tDIV tNEB { $$ = $1 / $3;} 
-     | tNB { $$ = $1;}
-     | tSUB Expr %prec NEG { $$ = -$2;}
+Expr : tNB tADD tNB
+     | tNB tSUB tNB
+     | tNB tMUL tNB
+     | tNB tDIV tNB
+     | tNEB tADD tNEB
+     | tNEB tSUB tNEB
+     | tNEB tMUL tNEB
+     | tNEB tDIV tNEB
+
+     | Expr tADD Expr 
+
+     | tNB
+     | tSUB Expr %prec NEG
      | ;
 
  ExprFLOAT : tNEB | tID ;
