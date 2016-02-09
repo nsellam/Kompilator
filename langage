@@ -1,0 +1,21 @@
+main, {, }
+const, 
+int (lettre+chiffres+_)
++,-,*,/,=, (, )
+esp, tab, virg
+\n,
+';'
+printf()\1
+forme expo
+plusieurs variables sur la meme ligne + malloc
+respecte la casse
+decl uniquement à l'intérieur de la fonction main(), avant les instructions
+aucun autre appel de fonction
+
+1.tokens
+2.transforme en assembleur
+
+
+google -> yacc union tdlp, tdlp.org, 6.3
+
+Type -> yylval
