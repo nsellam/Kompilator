@@ -10,4 +10,4 @@ lex.yy.c:
 	flex source.lex
 
 clean:
-	rm -f y.tab.c lex.yy.c
+	rm -f y.tab.c y.tab.h lex.yy.c
