@@ -5,14 +5,15 @@
 %}
 
 NB [0-9]+
-TEXT [A-Za-z0-9_]+
+E [Ee]["+"|"-"]?{NB}
+ID [A-Za-z][A-Za-z0-9_]*
+TEXT [A-Za-zéèàçùêâîûôëï0-9"-"\']+
 
 %%
 [ \t]         {printf("[ ]");}
 "main"        {printf("[main]"); return tMAIN;}
 "const"       {printf("[const]"); return tCONST;}
 "int"         {printf("[int]"); return tINT;}
-"float"       {printf("[float]"); return tFLOAT;}
 "void"        {printf("[void]"); return tVOID;}
 "if"          {printf("[if]"); return tIF;}
 "while"       {printf("[while]"); return tWHILE;}
@@ -41,11 +42,11 @@ TEXT [A-Za-z0-9_]+
 ")"           {printf("[)]"); return tPF;}
 "\""          {printf("[\"]"); return tGUI;}
 "print"       {printf("[print]"); return tPRINT;}
-{NB}"e"("+"|"-")?{NB}         {printf("[nEb::%f]", atof(yytext)); yylval.NBfloat = atof(yytext); return tNEB;}
-{NB}          {printf("[nb::%d]",atoi(yytext)); yylval.NBint = atoi(yytext); return tNB;}
-{TEXT}        {printf("[id::%s]",yytext); yylval.string = yytext; return tID;}
+{NB}{E}?      {printf("[entier::%d]", atoi(yytext)); yylval.integer = atoi(yytext); return tNB;}
+{ID}        {printf("[id::%s]",yytext); yylval.string = yytext; return tID;}
+{TEXT}        {printf("[text::%s]",yytext); yylval.string = yytext; return tTEXT;}
 
 %%
 void main(void) {
-  yylex();
+  yyparse();
 }
