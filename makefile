@@ -3,10 +3,10 @@ all: exe
 exe: y.tab.c lex.yy.c 
 	gcc y.tab.c lex.yy.c -ll -o exe
 
-y.tab.c: 
+y.tab.c: source.yacc 
 	yacc -d source.yacc
 
-lex.yy.c:
+lex.yy.c: source.lex
 	flex source.lex
 
 clean:
