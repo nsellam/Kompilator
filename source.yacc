@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include "symbol.h"
 %}
 
 %error-verbose
@@ -27,7 +28,7 @@
    Input : DFonction Input
          | ;
 
- DFonction : Type tID tPO Params tPF Body
+DFonction : Type tID tPO Params tPF Body
            | DMain;
 
  DMain : tINT tMAIN tPO tPF Body
@@ -48,6 +49,8 @@
         | While Instrs
         | Print Instrs
         | Decl Instrs
+        | Affect Instrs
+        | Declaff Instrs
         | Return
         | Body
         | ;
@@ -81,8 +84,17 @@
       | tID
       | tSUB tPO Expr tPF %prec tMUL;
 
- Decl : tINT tID tEQU tNB {
-      | tCONST Decl ;
+ Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0);};
+
+ SuiteDecl : tVIR tID {putInTable($2, 0, 0);} SuiteDecl 
+           | ;
+
+ Declaff : Const tINT tID tEQU Expr tPV {putInTable($2,1,0);} ;
+  
+ Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0);}
+         | tCONST tINT tID tEQU Expr tPV {putInTable($2,1,1);} ;
+ 
+ Affect : tID tEQU Expr tPV {putInTable($1,1,0);};
 
 %%
 int yyerror(char *s) {

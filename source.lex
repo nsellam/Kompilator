@@ -1,7 +1,8 @@
 %{
   //du code C (définition)
-  #include <stdio.h>
-  #include "y.tab.h"
+#include <stdio.h>
+#include <string.h>
+#include "y.tab.h"
 %}
 
 NB [0-9]+
@@ -41,10 +42,10 @@ TEXT [A-Za-zéèàçùêâîûôëï0-9"-"\']+
 "("           {printf("[(]"); return tPO;}
 ")"           {printf("[)]"); return tPF;}
 "\""          {printf("[\"]"); return tGUI;}
-"print"       {printf("[print]"); return tPRINT;}
+"print"f?     {printf("[print]"); return tPRINT;}
 {NB}{E}?      {printf("[entier::%d]", atoi(yytext)); yylval.integer = atoi(yytext); return tNB;}
-{ID}        {printf("[id::%s]",yytext); yylval.string = yytext; return tID;}
-{TEXT}        {printf("[text::%s]",yytext); yylval.string = yytext; return tTEXT;}
+{ID}          {printf("[id::%s]",yytext); yylval.string = strdup(yytext); return tID;}
+{TEXT}        {printf("[text::%s]",yytext); yylval.string = strdup(yytext); return tTEXT;}
 
 %%
 void main(void) {
