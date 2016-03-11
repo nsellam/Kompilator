@@ -7,6 +7,10 @@ int putInTable(char * pname, int pinit, int pconst);
 
 int getFromTable(char * pname);
 
+int addTemp();
+
+int suppTemp();
+
 struct symbole {
   char * name;
   int index;
@@ -15,9 +19,6 @@ struct symbole {
   int depth;
 } ;
 
-struct table {
-  struct symbole entry;
-  struct table * next;
-} ;
+struct symbole table[512];
 
 #endif

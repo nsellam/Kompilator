@@ -2,52 +2,43 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct table *T = NULL;
-int total = 0;
+int pointeur; 
+
+int initTable () {
+  int pointeur = 1;
+}
 
 int putInTable(char * pname, int pinit, int pconst) {
-    //rechercher dans la table
-    int pindex = 0;
-    int trouve = 0;
-    struct table * aux = T;
-    if (aux  != NULL) {
-        while (!trouve && aux->next != NULL) {
-            // si égal, on met à jour la variable
-            if (!strcmp((aux->entry).name,pname)) {
-                aux->entry.init = pinit;
-                trouve = 1;
-            }
-            pindex++;
-            aux = aux->next;
-        }
-    }
-    if (!trouve) {
-        struct table * new = malloc(sizeof(struct table));
-        new->entry.name = pname;
-        new->entry.index = pindex;
-        new->entry.init = pinit;
-        new->entry.isConst = pconst;
-        new->entry.depth = 0;
-        total++;
-        new->next = NULL;
-        aux->next = new;
-    }
-    return 0;
+  table[pointeur].name = pname;
+  table[pointeur].index = pointeur;
+  table[pointeur].init = pinit;
+  table[pointeur].isConst = pconst;
+  table[pointeur].depth = 0;
+  pointeur++;
+  return 0;
 }
 
 int getFromTable(char * pname) {
-    int pindex = -1;
-    int trouve = 0;
-    struct table * aux = T;
-    if (aux != NULL) {
-        while (!trouve && aux->next != NULL) {
-            // si égal, on a gagné
-            if (!strcmp((aux->entry).name,pname)) {
-                pindex = aux->entry.index;
-                trouve = 1;
-            }
-            aux = aux->next;
-        }
+  int i = 0;
+  int pindex = -1;
+  int trouve = 0;
+  while (i < pointeur && !trouve) {
+    if (!strcmp((table[i].name),pname)) {
+      pindex = i;
+      trouve = 1;
     }
-    return pindex;
+    i++;
+  }
+  return pindex;
+}
+
+int addTemp() {
+  //rechercher dans la table
+  pointeur++;
+  return pointeur-1;
+}
+
+int suppTemp() {
+  pointeur--;
+  return 0;
 }
