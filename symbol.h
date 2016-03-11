@@ -3,6 +3,10 @@
 
 int total;
 
+int putInTable(char * pname, int pinit, int pconst);
+
+int getFromTable(char * pname);
+
 struct symbole {
   char * name;
   int index;
@@ -15,10 +19,5 @@ struct table {
   struct symbole entry;
   struct table * next;
 } ;
-
-int putInTable(char * pname, int pinit, int pconst);
-  
-int getFromTable(char * pname);
-
 
 #endif

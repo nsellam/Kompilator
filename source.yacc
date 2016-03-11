@@ -4,12 +4,12 @@
 %}
 
 %error-verbose
-%token tMAIN 
+%token tMAIN
 %token tCONST tINT tVOID tTEXT
-%token tADD tSUB tMUL tDIV tEQU 
-%token tVIR tPV tAO tAF tPO tPF tGUI 
-%token tPRINT tIF tWHILE tFOR tELSE tRET 
-%token tOR tAND tNOT 
+%token tADD tSUB tMUL tDIV tEQU
+%token tVIR tPV tAO tAF tPO tPF tGUI
+%token tPRINT tIF tWHILE tFOR tELSE tRET
+%token tOR tAND tNOT
 %token tLT tGT tLE tGE tEGALEGAL
 %start Input
 %union
@@ -25,79 +25,84 @@
 %left tMUL tDIV
 %left tOR tAND tNOT
 %%
-   Input : DFonction Input
-         | ;
+Input : DFonction Input
+    | ;
 
 DFonction : Type tID tPO Params tPF Body
-           | DMain;
+    | DMain;
 
- DMain : tINT tMAIN tPO tPF Body
-       | tINT tMAIN tPO tVOID tPF Body;
-   
- Type : tVOID
-      | tINT ;
-   
- Params : Type tID SuiteParams
-        | ;
-   
- SuiteParams : tVIR tINT tID SuiteParams
-             | ;
-   
- Body : tAO Instrs tAF;
-   
- Instrs : If Instrs
-        | While Instrs
-        | Print Instrs
-        | Decl Instrs
-        | Affect Instrs
-        | Declaff Instrs
-        | Return
-        | Body
-        | ;
+DMain : tINT tMAIN tPO tPF Body
+    | tINT tMAIN tPO tVOID tPF Body;
 
- If : tIF tPO Cond tPF Body;
+Type : tVOID
+    | tINT ;
 
- While : tWHILE tPO Cond tPF Body;
+Params : Type tID SuiteParams
+    | ;
 
- Print : tPRINT tPO tGUI Text tGUI tPF tPV
-       | tPRINT tPO tID tPF tPV;
+SuiteParams : tVIR tINT tID SuiteParams
+    | ;
 
- Text : tTEXT Text
-      | ;
+Body : tAO Instrs tAF;
 
- Return : tRET tID;
+Instrs : If Instrs
+    | While Instrs
+    | Print Instrs
+    | Decl Instrs
+    | Affect Instrs
+    | Declaff Instrs
+    | Return
+    | Body
+    | ;
 
- Cond : Expr Comparateur Expr
-      | Cond tOR Cond
-      | Cond tAND Cond
-      | tPO Cond tPF
-      | tNOT Cond;
+If : tIF tPO Cond tPF Body;
 
- Comparateur : tLT | tGT | tLE | tGE | tEGALEGAL;
+While : tWHILE tPO Cond tPF Body;
 
- Expr : Expr tADD Expr
-      | Expr tSUB Expr
-      | Expr tMUL Expr
-      | Expr tDIV Expr
-      | tPO Expr tPF
-      | tNB
-      | tID
-      | tSUB tPO Expr tPF %prec tMUL;
+Print : tPRINT tPO tGUI Text tGUI tPF tPV
+    | tPRINT tPO tID tPF tPV;
 
- Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0);};
+Text : tTEXT Text
+    | ;
 
- SuiteDecl : tVIR tID {putInTable($2, 0, 0);} SuiteDecl 
-           | ;
+Return : tRET tID;
 
- Declaff : Const tINT tID tEQU Expr tPV {putInTable($2,1,0);} ;
-  
- Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0);}
-         | tCONST tINT tID tEQU Expr tPV {putInTable($2,1,1);} ;
- 
- Affect : tID tEQU Expr tPV {putInTable($1,1,0);};
+Cond : Expr Comparateur Expr
+    | Cond tOR Cond
+    | Cond tAND Cond
+    | tPO Cond tPF
+    | tNOT Cond;
+
+Comparateur : tLT | tGT | tLE | tGE | tEGALEGAL;
+
+Expr : Expr tADD Expr
+    | Expr tSUB Expr
+    | Expr tMUL Expr
+    | Expr tDIV Expr
+    | tPO Expr tPF
+    | tNB
+    | tID
+    | tSUB tPO Expr tPF %prec tMUL;
+
+Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0);};
+
+SuiteDecl : tVIR tID {putInTable($2, 0, 0);} SuiteDecl
+    | ;
+
+Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0);}
+    | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1);} ;
+
+Affect : tID tEQU Expr tPV {putInTable($1,1,0);};
 
 %%
 int yyerror(char *s) {
   fprintf(stdout, "Fatal Error de Syntaxe de la Mort : %s\n", s);
   return 0;
+}
+
+void main() {
+    FILE * pFile;
+    pFile = fopen ("outAssembleur","w");
+    fprintf (pFile, "Test d'ecriture dans le fichier");
+    fclose (pFile);
 }
