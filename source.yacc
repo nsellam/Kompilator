@@ -101,6 +101,7 @@ int yyerror(char *s) {
 }
 
 void main() {
+    yyparse();
     FILE * pFile;
     pFile = fopen ("outAssembleur","w");
     fprintf (pFile, "Test d'ecriture dans le fichier");

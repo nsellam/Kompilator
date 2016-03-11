@@ -48,6 +48,3 @@ TEXT [A-Za-zéèàçùêâîûôëï0-9"-"\']+
 {TEXT}        {printf("[text::%s]",yytext); yylval.string = strdup(yytext); return tTEXT;}
 
 %%
-void main(void) {
-  yyparse();
-}
