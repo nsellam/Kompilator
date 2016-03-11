@@ -92,7 +92,7 @@ SuiteDecl : tVIR tID {putInTable($2, 0, 0);} SuiteDecl
 Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0);}
     | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1);} ;
 
-Affect : tID tEQU Expr tPV {putInTable($1,1,0);};
+Affect : tID tEQU Expr tPV {putInTable($1,1,0);fprintf(fopen("outAssembleur","w"), "Test d'ecriture dans le fichier");};
 
 %%
 int yyerror(char *s) {
@@ -100,10 +100,11 @@ int yyerror(char *s) {
   return 0;
 }
 
+
+
 void main() {
-    yyparse();
     FILE * pFile;
     pFile = fopen ("outAssembleur","w");
-    fprintf (pFile, "Test d'ecriture dans le fichier");
+    yyparse();
     fclose (pFile);
 }
