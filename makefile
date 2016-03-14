@@ -1,7 +1,7 @@
 all: exe
 
 exe: y.tab.c lex.yy.c symbol.c
-	gcc y.tab.c lex.yy.c symbol.c -ll -o exe
+	gcc -g y.tab.c lex.yy.c symbol.c -ll -o exe
 
 y.tab.c: source.yacc
 	yacc -d source.yacc
