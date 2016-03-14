@@ -1,4 +1,4 @@
-all: exe
+all: exe interpreteur
 
 exe: y.tab.c lex.yy.c symbol.c
 	gcc -g y.tab.c lex.yy.c symbol.c -ll -o exe
@@ -9,5 +9,14 @@ y.tab.c: source.yacc
 lex.yy.c: source.lex
 	flex source.lex
 
+interpreteur: y.interp.c lexinterp.yy.c
+	gcc -g y.interp.c lexinterp.yy.c -ll -o interpreteur
+
+y.interp.c: interpreteur.yacc
+	yacc -d interpreteur.yacc -o y.interp.c
+
+lexinterp.yy.c: interpreteur.lex
+	flex -o lexinterp.yy.c interpreteur.lex
+
 clean:
-	rm -f y.tab.c y.tab.h lex.yy.c
+	rm -f y.tab.c y.tab.h lex.yy.c y.interp.c y.interp.h lexinterp.yy.c

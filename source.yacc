@@ -19,6 +19,7 @@
  }
 %token <integer> tNB
 %token <string> tID
+%type <integer> Expr
 
 %right tEQU
 %left tADD tSUB
@@ -60,7 +61,7 @@ If : tIF tPO Cond tPF Body;
 While : tWHILE tPO Cond tPF Body;
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
-    | tPRINT tPO tID tPF tPV;
+    | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));};
 
 Text : tTEXT Text
     | ;
@@ -75,21 +76,22 @@ Cond : Expr Comparateur Expr
 
 Comparateur : tLT | tGT | tLE | tGE | tEGALEGAL;
 
-Expr : Expr tADD Expr
-    | Expr tSUB Expr
-    | Expr tMUL Expr
-    | Expr tDIV Expr
-    | tPO Expr tPF
+Expr : Expr tADD Expr {ass_add(addTemp(),$1,$3);}
+    | Expr tSUB Expr {ass_sou(addTemp(),$1,$3);}
+    | Expr tMUL Expr {ass_mul(addTemp(),$1,$3);}
+    | Expr tDIV Expr {ass_div(addTemp(),$1,$3);}
+    | tPO Expr tPF {$$ = $2;}
     | tNB
-    | tID
-    | tSUB tPO Expr tPF %prec tMUL;
+    | tID {$$ = getFromTable($1);}
+    /* Que fait cette ligne en dessous ?? */
+    /*| tSUB tPO Expr tPF %prec tMUL*/;
 
 Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0);};
 
 SuiteDecl : tVIR tID {putInTable($2, 0, 0);} SuiteDecl
     | ;
 
-Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0);FILE * pFile;pFile=fopen("outAssembleur","w");fprintf(pFile, "test\n");fclose (pFile);}
+Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0);ass_afc(getFromTable($2),$4);}
     | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1);} ;
 
 Affect : tID tEQU Expr tPV {putInTable($1,1,0);};
