@@ -9,6 +9,15 @@ int initTable() {
   return 0;
 }
 
+int getTemp(int i) {
+  switch (i) {
+  case 1 : return pointeur-1;
+  case 2 : return pointeur-2;
+  default :
+    return -1;
+  }
+}
+
 int finalizeTable() {
   fclose (pFile);
   return 0;
@@ -26,7 +35,7 @@ int putInTable(char * pname, int pinit, int pconst) {
 }
 
 int getFromTable(char * pname) {
-  int i = 0;
+  int i = 1;
   int pindex = -1;
   int trouve = 0;
   while (i < pointeur && !trouve) {
