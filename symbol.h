@@ -1,7 +1,15 @@
 #ifndef SYMBOL_H
 #define SYMBOL_H
 
-int total;
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+// Doit être invoqué avant le parsing afin d'ouvrir le fichier outAssembleur
+int initTable();
+
+// Doit être invoqué à la fin du parsing pour fermer le fichier outAssembleur
+int finalizeTable();
 
 int putInTable(char * pname, int pinit, int pconst);
 
@@ -10,6 +18,31 @@ int getFromTable(char * pname);
 int addTemp();
 
 int suppTemp();
+
+int ass_add(int adr_result, int adr_op1, int adr_op2);
+
+int ass_mul(int adr_result, int adr_op1, int adr_op2);
+
+int ass_sou(int adr_result, int adr_op1, int adr_op2);
+
+int ass_div(int adr_result, int adr_op1, int adr_op2);
+
+int ass_cop(int adr_result, int adr_op);
+
+int ass_afc(int adr_result, int val);
+
+int ass_jmp(int num_instruct);
+
+int ass_jmf(int adr_x, int num_instruct);
+
+int ass_inf(int adr_result, int adr_op1, int adr_op2);
+
+int ass_sup(int adr_result, int adr_op1, int adr_op2);
+
+int ass_equ(int adr_result, int adr_op1, int adr_op2);
+
+int ass_pri(int adr_result);
+
 
 struct symbole {
   char * name;
