@@ -8,4 +8,3 @@ echo
 echo "--------- Interprétation ---------"
 echo
 cat outAssembleur | ./interpreteur
-rm outAssembleur
