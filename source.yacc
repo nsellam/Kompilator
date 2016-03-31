@@ -78,13 +78,13 @@ Cond : Expr Comparateur Expr
 
 Comparateur : tLT | tGT | tLE | tGE | tEGALEGAL;
 
-Expr : Expr tADD Expr {ass_add(addTemp(),getTemp(1),getTemp(2)); suppTemp();}
-     | Expr tSUB Expr {ass_sou(addTemp(),getTemp(1),getTemp(2)); suppTemp();}
-     | Expr tMUL Expr {ass_mul(addTemp(),getTemp(1),getTemp(2)); suppTemp();}
-     | Expr tDIV Expr {ass_div(addTemp(),getTemp(1),getTemp(2)); suppTemp();}
+Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
+     | Expr tSUB Expr {ass_sou(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
+     | Expr tMUL Expr {ass_mul(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
+     | Expr tDIV Expr {ass_div(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | tPO Expr tPF {$$ = $2;}/*comme Expr est de type int, on lui donne la valeur du nombre*/
      | tNB {ass_afc(addTemp(),$1);}
-     | tID {if (getFromTable($1) == -1){printf("Fatal Error : Variable not found\n"); exit;} ass_afc(addTemp(),getFromTable($1));}
+     | tID {if (getFromTable($1) == -1){printf("Fatal Error : Variable not found\n"); exit;} ass_cop(addTemp(),getFromTable($1));}
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
 
 Decl : tINT SuiteDecl; 
@@ -96,7 +96,7 @@ SuiteDecl : tID tVIR SuiteDecl {putInTable($1, 0, 0);}
 Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0); ass_cop(getFromTable($2),$4);}
         | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1);} ;
 
-Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp()); suppTemp();};
+Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);};
 
 %%
 int yyerror(char *s) {

@@ -8,6 +8,9 @@
 // Doit être invoqué avant le parsing afin d'ouvrir le fichier outAssembleur
 int initTable();
 
+// Renvoie les adresses des variables temporaires précédentes
+int getTemp(int i);
+
 // Doit être invoqué à la fin du parsing pour fermer le fichier outAssembleur
 int finalizeTable();
 

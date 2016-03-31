@@ -10,11 +10,10 @@ int initTable() {
 }
 
 int getTemp(int i) {
-  switch (i) {
-  case 1 : return pointeur-1;
-  case 2 : return pointeur-2;
-  default :
+  if (i>=pointeur) {
     return -1;
+  } else {
+  return pointeur-i;
   }
 }
 
@@ -57,9 +56,13 @@ int addTemp() {
   return pointeur-1;
 }
 
-int suppTemp() {
-  pointeur--;
-  return 0;
+int suppTemp(int i) {
+  if (i>=pointeur) {
+    return -1;
+  } else {
+    pointeur-=i;
+    return 0;
+  }
 }
 
 int ass_add(int adr_result, int adr_op1, int adr_op2) {
