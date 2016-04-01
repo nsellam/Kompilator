@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include "symbol.h"
+#include "label.h"
 %}
 
 %error-verbose
@@ -87,7 +88,7 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | tID {if (getFromTable($1) == -1){printf("Fatal Error : Variable not found\n"); exit;} ass_cop(addTemp(),getFromTable($1));}
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
 
-Decl : tINT SuiteDecl; 
+Decl : tINT SuiteDecl;
 /*Les variables sont stockées dans la mémoire dans le sens inverse des déclarations*/
 
 SuiteDecl : tID tVIR SuiteDecl {putInTable($1, 0, 0);}

@@ -1,7 +1,7 @@
 all: exe interpreteur
 
-exe: y.tab.c lex.yy.c symbol.c
-	gcc -g y.tab.c lex.yy.c symbol.c -ll -o exe
+exe: y.tab.c lex.yy.c symbol.c label.c
+	gcc -g y.tab.c lex.yy.c symbol.c label.c -ll -o exe
 
 y.tab.c: source.yacc
 	yacc -d source.yacc

@@ -5,6 +5,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+struct symbole {
+  char * name;
+  int index;
+  int init;
+  int isConst;
+  int depth;
+} ;
+
+struct symbole table[512];
+
 // Doit être invoqué avant le parsing afin d'ouvrir le fichier outAssembleur
 int initTable();
 
@@ -45,16 +55,5 @@ int ass_sup(int adr_result, int adr_op1, int adr_op2);
 int ass_equ(int adr_result, int adr_op1, int adr_op2);
 
 int ass_pri(int adr_result);
-
-
-struct symbole {
-  char * name;
-  int index;
-  int init;
-  int isConst;
-  int depth;
-} ;
-
-struct symbole table[512];
 
 #endif
