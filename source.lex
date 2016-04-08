@@ -11,6 +11,7 @@ ID [A-Za-z][A-Za-z0-9_]*
 TEXT [A-Za-zéèàçùêâîûôëï0-9"-"\']+
 
 %%
+%x COMMENT_BLOCK COMMENT_LINE
 [ \t]         {printf(" ");}
 "main"        {printf("[main]"); return tMAIN;}
 "const"       {printf("[const]"); return tCONST;}
@@ -46,5 +47,10 @@ TEXT [A-Za-zéèàçùêâîûôëï0-9"-"\']+
 {NB}{E}?      {printf("[entier::%d]", atoi(yytext)); yylval.integer = atoi(yytext); return tNB;}
 {ID}          {printf("[id::%s]",yytext); yylval.string = strdup(yytext); return tID;}
 {TEXT}        {printf("[text::%s]",yytext); yylval.string = strdup(yytext); return tTEXT;}
-
+"/*"          {BEGIN(COMMENT_BLOC)}
+<COMMENT_BLOCK> "*/" {BEGIN(0)}
+<COMMENT_BLOCK>. {}
+"//"          {BEGIN(COMMENT_LINE)}
+<COMMENT_LINE> "\n" {BEGIN(0)}
+<COMMENT_LINE>. {}
 %%
