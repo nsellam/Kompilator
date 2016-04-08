@@ -49,6 +49,10 @@ SuiteParams : tVIR tINT tID SuiteParams
 
 Body : tAO Instrs tAF;
 
+Commentaire : tDIV tMUL Comment;
+Comment : tTEXT Comment
+        | tMUL tDIV;
+
 Instrs : If Instrs
        | While Instrs
        | Print Instrs
@@ -57,9 +61,10 @@ Instrs : If Instrs
        | Declaff Instrs
        | Return
        | Body
+       | Commentaire
        | ;
 
-If : tIF tPO Cond tPF Body;
+If : tIF tPO Cond tPF Body {ajouterLabelIf(nb_lignes);};
 
 While : tWHILE tPO Cond tPF Body;
 
@@ -98,6 +103,7 @@ Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0); ass_cop(getFromTable($2),$
         | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1);} ;
 
 Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);};
+
 
 %%
 int yyerror(char *s) {

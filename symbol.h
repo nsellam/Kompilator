@@ -14,6 +14,7 @@ struct symbole {
 } ;
 
 struct symbole table[512];
+int nb_lignes;
 
 // Doit être invoqué avant le parsing afin d'ouvrir le fichier outAssembleur
 int initTable();

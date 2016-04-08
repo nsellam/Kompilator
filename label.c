@@ -21,10 +21,12 @@ int finalizeTableLabels() {
 char * ajouterLabelIf(int ligne_debut) {
     char * nomLabel = ".IF";
     sprintf(nomLabel,"%d",nb_if);
-    strcpy(table_labels[nb_labels].nom,nomLabel);
+    printf("NOM_LABEL : %s\n", nomLabel);
+    /*strcpy(table_labels[nb_labels].nom,nomLabel);
     table_labels[nb_labels].ligne_debut_corrrespondante = ligne_debut;
+    fprintf(pFile, "%s ", nomLabel);
     nb_labels++;
-    nb_if++;
+    nb_if++;*/
     return nomLabel;
 }
 
