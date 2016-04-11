@@ -3,15 +3,15 @@ int main()
     i = 3;
     j = 4;
     k = 8;
-    printf(i);
+    printf(i); // -> 3
     r = i + j * i + (k - j)/j;
-    printf(r);
+    printf(r); // -> 16
     j = k;
-    printf(j);
+    printf(j); // -> 8
     r = r / j;
-    printf(r);
-    if (0 == 0) {
-        j = 0;
+    printf(r); // -> 4
+/*  if (0 == 0) {
+    j = 0;
     }
     
     /*

@@ -5,6 +5,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/* La table des symboles est représentée par un tableau de
+ * 512 lignes contenant des "symboles".
+ * Un symbole contient 
+ * @name : nom de la variable (ex: a, b)
+ * @index : indice dans le symbole
+ * @init : 1 si la variable est initialisée
+ * @isConst : 1 si la variable est une constante
+ */
+
 struct symbole {
   char * name;
   int index;

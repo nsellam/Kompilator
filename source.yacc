@@ -27,8 +27,9 @@
 %left tMUL tDIV
 %left tOR tAND tNOT
 %%
+
 Input : DFonction Input
-| {printf("fin\n");};
+      | {printf("THE END\n");};
 
 DFonction : Type tID tPO Params tPF Body
           | DMain;
@@ -39,7 +40,7 @@ DMain : tINT tMAIN tPO tPF Body
       | tINT tMAIN tPO tVOID tPF Body;
 
 Type : tVOID
-    | tINT ;
+     | tINT ;
 
 Params : Type tID SuiteParams
        | ;
@@ -49,10 +50,6 @@ SuiteParams : tVIR tINT tID SuiteParams
 
 Body : tAO Instrs tAF;
 
-Commentaire : tDIV tMUL Comment;
-Comment : tTEXT Comment
-        | tMUL tDIV;
-
 Instrs : If Instrs
        | While Instrs
        | Print Instrs
@@ -61,7 +58,6 @@ Instrs : If Instrs
        | Declaff Instrs
        | Return
        | Body
-       | Commentaire
        | ;
 
 If : tIF tPO Cond tPF Body {ajouterLabelIf(nb_lignes);};
@@ -88,30 +84,26 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tSUB Expr {ass_sou(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tMUL Expr {ass_mul(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tDIV Expr {ass_div(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
-     | tPO Expr tPF {$$ = $2;}/*comme Expr est de type int, on lui donne la valeur du nombre*/
+     | tPO Expr tPF {$$ = $2;} 
      | tNB {ass_afc(addTemp(),$1);}
      | tID {if (getFromTable($1) == -1){printf("Fatal Error : Variable not found\n"); exit;} ass_cop(addTemp(),getFromTable($1));}
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
 
-Decl : tINT SuiteDecl;
-/*Les variables sont stockées dans la mémoire dans le sens inverse des déclarations*/
+Decl : tINT SuiteDecl tPV;
 
-SuiteDecl : tID tVIR SuiteDecl {putInTable($1, 0, 0);}
-          | tID tPV {putInTable($1, 0, 0);};
+SuiteDecl : SuiteDecl tVIR tID {putInTable($3, 0, 0);}
+          | tID {putInTable($1, 0, 0);};
 
-Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0); ass_cop(getFromTable($2),$4);}
-        | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1);} ;
+Declaff : tINT tID tEQU Expr tPV {putInTable($2,0,0); ass_cop(getFromTable($2),$4);}
+        | tCONST tINT tID tEQU Expr tPV {ass_cop(getFromTable($3),$5);} ;
 
 Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);};
-
 
 %%
 int yyerror(char *s) {
   fprintf(stdout, "Fatal Error de Syntaxe de la Mort : %s\n", s);
   return 0;
 }
-
-
 
 void main() {
   initTable();

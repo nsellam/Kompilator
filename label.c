@@ -6,7 +6,7 @@ int nb_while;
 FILE * pFile;
 
 int initTableLabels() {
-  pFile=fopen("outAsembleur","w");
+  pFile=fopen("outAssembleur","w");
   nb_labels = 0;
   nb_if = 0;
   nb_while = 0;
