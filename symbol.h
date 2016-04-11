@@ -44,7 +44,7 @@ int ass_afc(int adr_result, int val);
 
 int ass_jmp(int num_instruct);
 
-int ass_jmf(int adr_x, int num_instruct);
+int ass_jmf(int adr_x, char * symbole_ou_sauter);
 
 int ass_inf(int adr_result, int adr_op1, int adr_op2);
 

@@ -107,8 +107,8 @@ int ass_jmp(int num_instruct) {
     return 0;
 }
 
-int ass_jmf(int adr_x, int num_instruct) {
-    fprintf(pFile, "JMF @%d instruc:%d\n", adr_x, num_instruct);
+int ass_jmf(int adr_x, char * symbole_ou_sauter) {
+    fprintf(pFile, "JMF @%d %s\n", adr_x, symbole_ou_sauter);
     nb_lignes++;
     return 0;
 }

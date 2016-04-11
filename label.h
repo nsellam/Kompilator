@@ -7,20 +7,20 @@
 
 struct label {
     char * nom;
-    int ligne_debut_corrrespondante;
-    int ligne_fin_corrrespondante;
+    int ligne;
 };
+
+int nb_if;
+int nb_while;
 
 struct label table_labels[512];
 
 int initTableLabels();
 
-int ajouterLabelIf(int ligne_debut);
+int ajouterLabelIf(int ligne);
 
-int ajouterLabelWhile(int ligne_debut);
+int ajouterLabelWhile(int ligne);
 
-int ajouterLabelFonction(char * nom_fonction, int ligne_debut);
-
-int ajouterLigneFin(char * nom_label, int ligne_fin);
+int ajouterLabelFonction(char * nom_fonction, int ligne);
 
 #endif

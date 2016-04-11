@@ -60,9 +60,9 @@ Instrs : If Instrs
        | Body
        | ;
 
-If : tIF tPO Cond tPF {ass_jmf(getTemp(1), -1);} Body {ajouterLabelIf(nb_lignes);};
+If : tIF tPO Cond tPF {char * nom = ".IF"; char nomLabel[10]; sprintf(nomLabel,"%s%d",nom, nb_if); ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelIf(nb_lignes);};
 
-While : tWHILE tPO Cond tPF {ass_jmf(getTemp(1), -1);} Body {ajouterLabelWhile(nb_lignes);};
+While : tWHILE tPO Cond tPF {char * nom = ".WHILE"; char nomLabel[10]; sprintf(nomLabel,"%s%d",nom, nb_while); ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelWhile(nb_lignes);};
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
       | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));};
@@ -114,6 +114,11 @@ void main() {
   yyparse();
   /*finalizeTable();
   finalizeTableLabels();*/
+  fclose(pFile);
+
+  pFile=fopen("outAssembleur","r+");
+  remplacerLabels(pFile);
+  // Faire la seconde passe sur l'assembleur
   fclose(pFile);
 
 }
