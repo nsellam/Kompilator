@@ -29,11 +29,13 @@ int ajouterLabelIf(int ligne_debut) {
 int ajouterLabelWhile(int ligne_debut) {
     char * nom = ".WHILE";
     char nomLabel[10];
-    sprintf(nomLabel,"%d",nb_while);
+    sprintf(nomLabel,"%s%d",nom,nb_while);
+    table_labels[nb_labels].nom = malloc(sizeof(nomLabel));
     strcpy(table_labels[nb_labels].nom,nomLabel);
     table_labels[nb_labels].ligne_debut_corrrespondante = ligne_debut;
+    fprintf(pFile, "%s\n", nomLabel);
     nb_labels++;
-    nb_if++;
+    nb_while++;
     return 0;
 }
 

@@ -25,7 +25,6 @@ int putInTable(char * pname, int pinit, int pconst) {
   table[pointeur].init = pinit;
   table[pointeur].isConst = pconst;
   table[pointeur].depth = 0;
-  printf("pointeur VAUT : %d, table[pointeur].name : %s, pname : %s\n", pointeur, table[pointeur].name, pname);
   pointeur++;
   return 0;
 }
@@ -33,11 +32,11 @@ int putInTable(char * pname, int pinit, int pconst) {
 int getFromTable(char * pname) {
   int i = 1;
   int pindex = -1;
-  int trouve = 0;
-  while (i < pointeur && !trouve) {
+  int trouve = 0, null = 0;
+  while (i <= pointeur && !trouve && !null) {
       if (table[i].name == NULL) {
-          printf("I VAUT : %d, table[i].name : %s, pname : %s\n", i, table[i].name, pname);
-          return -2;
+          null = 1;
+          pindex = -1;
       }
     if (!strcmp((table[i].name),pname)) {
       pindex = i;
@@ -49,8 +48,11 @@ int getFromTable(char * pname) {
 }
 
 int addTemp() {
+  // On ajoute le caractère 0 dans la table des symboles pour les variables
+  //temporaire, car une variable ne peut pas être un 0 et qu'il ne doit pas y
+  //avoir de null dans la table.
+  table[pointeur].name = "0";
   pointeur++;
-  printf("pointeur VAUT : %d\n", pointeur);
   return pointeur-1;
 }
 

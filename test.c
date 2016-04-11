@@ -4,10 +4,10 @@ int main() {
         printf(a);
     }
     int i = 0;
-    /*while (0 == 0) {
+    while (i < a) {
         printf(i);
-        i++;
-    }*/
+        i = i + 1;
+    }
 }
 
 /*{ int i,j,k,r;

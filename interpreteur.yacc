@@ -22,6 +22,7 @@ int ip = 0;
 }
 %token <integer> tNB
 %token <integer> tIF
+%token <integer> tWHILE
 %%
 Input : Instrs Input
       | ;
@@ -56,6 +57,7 @@ Instrs :
                                   memoire[$2],$3,memoire[$3],$4,memoire[$4]);}
     | tPRI tNB {printf("print mem[%d]: %d",$2,memoire[$2]);};
     | tLABEL tIF {printf("if : %d\n",$2);};
+    | tLABEL tWHILE {printf("while : %d\n",$2);};
 %%
 int yyerror(char *s) {
   fprintf(stdout, "Fatal Error de Syntaxe de la Mort dans l'interpretation : %s\n", s);
