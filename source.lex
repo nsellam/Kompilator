@@ -36,10 +36,10 @@ TEXT [A-Za-zéèàçùêâîûôëï0-9"-"\']+
 "/"           {printf("[/]"); return tDIV;}
 "="           {printf("[=]"); return tEQU;}
 ","           {printf("[,]"); return tVIR;}
-"\n"          {printf("[\\n]\n");}
-";"           {printf("[;]\n"); return tPV;}
-"{"           {printf("[{]\n"); return tAO;}
-"}"           {printf("[}]\n"); return tAF;}
+"\n"          {printf("\n");}
+";"           {printf("[;]"); return tPV;}
+"{"           {printf("[{]"); return tAO;}
+"}"           {printf("[}]"); return tAF;}
 "("           {printf("[(]"); return tPO;}
 ")"           {printf("[)]"); return tPF;}
 "\""          {printf("[\"]"); return tGUI;}

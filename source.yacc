@@ -96,8 +96,8 @@ Decl : tINT SuiteDecl tPV;
 SuiteDecl : SuiteDecl tVIR tID {putInTable($3, 0, 0);}
           | tID {putInTable($1, 0, 0);};
 
-Declaff : tINT tID tEQU Expr tPV {putInTable($2,0,0); ass_cop(getFromTable($2),$4);}
-        | tCONST tINT tID tEQU Expr tPV {ass_cop(getFromTable($3),$5);} ;
+Declaff : tINT tID tEQU Expr tPV {putInTable($2,0,0); ass_cop(getFromTable($2),getFromTable($2)-1);}
+        | tCONST tINT tID tEQU Expr tPV {ass_cop(getFromTable($3),$5);};
 
 Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);};
 
