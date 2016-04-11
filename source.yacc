@@ -60,9 +60,9 @@ Instrs : If Instrs
        | Body
        | ;
 
-If : tIF tPO Cond tPF Body {ajouterLabelIf(nb_lignes);};
+If : tIF {ajouterLabelIf(nb_lignes);} tPO Cond tPF Body;
 
-While : tWHILE tPO Cond tPF Body;
+While : tWHILE {ajouterLabelWhile(nb_lignes);} tPO Cond tPF Body;
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
       | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));};
@@ -72,19 +72,21 @@ Text : tTEXT Text
 
 Return : tRET tID;
 
-Cond : Expr Comparateur Expr
+Cond : Expr tLT Expr {ass_inf(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
+     | Expr tGT Expr {ass_sup(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
+     | Expr tLE Expr
+     | Expr tGE Expr
+     | Expr tEGALEGAL Expr {ass_equ(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Cond tOR Cond
      | Cond tAND Cond
      | tPO Cond tPF
      | tNOT Cond;
 
-Comparateur : tLT | tGT | tLE | tGE | tEGALEGAL;
-
 Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tSUB Expr {ass_sou(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tMUL Expr {ass_mul(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tDIV Expr {ass_div(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
-     | tPO Expr tPF {$$ = $2;} 
+     | tPO Expr tPF {$$ = $2;}
      | tNB {ass_afc(addTemp(),$1);}
      | tID {if (getFromTable($1) == -1){printf("Fatal Error : Variable not found\n"); exit;} ass_cop(addTemp(),getFromTable($1));}
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
@@ -106,7 +108,12 @@ int yyerror(char *s) {
 }
 
 void main() {
-  initTable();
+  FILE * pFile=fopen("outAssembleur","w");
+  initTable(pFile);
+  initTableLabels(pFile);
   yyparse();
-  finalizeTable();
+  /*finalizeTable();
+  finalizeTableLabels();*/
+  fclose(pFile);
+
 }

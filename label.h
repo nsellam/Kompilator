@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 struct label {
     char * nom;
@@ -14,11 +15,9 @@ struct label table_labels[512];
 
 int initTableLabels();
 
-int finalizeTableLabels();
+int ajouterLabelIf(int ligne_debut);
 
-char * ajouterLabelIf(int ligne_debut);
-
-char * ajouterLabelWhile(int ligne_debut);
+int ajouterLabelWhile(int ligne_debut);
 
 int ajouterLabelFonction(char * nom_fonction, int ligne_debut);
 

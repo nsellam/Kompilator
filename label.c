@@ -5,39 +5,36 @@ int nb_if;
 int nb_while;
 FILE * pFile;
 
-int initTableLabels() {
-  pFile=fopen("outAssembleur","w");
+int initTableLabels(FILE * fichier) {
+  pFile = fichier;
   nb_labels = 0;
   nb_if = 0;
   nb_while = 0;
   return 0;
 }
 
-int finalizeTableLabels() {
-  fclose (pFile);
-  return 0;
-}
-
-char * ajouterLabelIf(int ligne_debut) {
-    char * nomLabel = ".IF";
-    sprintf(nomLabel,"%d",nb_if);
-    printf("NOM_LABEL : %s\n", nomLabel);
-    /*strcpy(table_labels[nb_labels].nom,nomLabel);
+int ajouterLabelIf(int ligne_debut) {
+    char * nom = ".IF";
+    char nomLabel[10];
+    sprintf(nomLabel,"%s%d",nom, nb_if);
+    table_labels[nb_labels].nom = malloc(sizeof(nomLabel));
+    strcpy(table_labels[nb_labels].nom,nomLabel);
     table_labels[nb_labels].ligne_debut_corrrespondante = ligne_debut;
-    fprintf(pFile, "%s ", nomLabel);
+    fprintf(pFile, "%s\n", nomLabel);
     nb_labels++;
-    nb_if++;*/
-    return nomLabel;
+    nb_if++;
+    return 0;
 }
 
-char * ajouterLabelWhile(int ligne_debut) {
-    char * nomLabel = ".WHILE";
+int ajouterLabelWhile(int ligne_debut) {
+    char * nom = ".WHILE";
+    char nomLabel[10];
     sprintf(nomLabel,"%d",nb_while);
     strcpy(table_labels[nb_labels].nom,nomLabel);
     table_labels[nb_labels].ligne_debut_corrrespondante = ligne_debut;
     nb_labels++;
     nb_if++;
-    return nomLabel;
+    return 0;
 }
 
 int ajouterLabelFonction(char * nom_fonction, int ligne_debut) {

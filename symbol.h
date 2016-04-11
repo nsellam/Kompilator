@@ -5,15 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/* La table des symboles est représentée par un tableau de
- * 512 lignes contenant des "symboles".
- * Un symbole contient 
- * @name : nom de la variable (ex: a, b)
- * @index : indice dans le symbole
- * @init : 1 si la variable est initialisée
- * @isConst : 1 si la variable est une constante
- */
-
 struct symbole {
   char * name;
   int index;
@@ -25,14 +16,11 @@ struct symbole {
 struct symbole table[512];
 int nb_lignes;
 
-// Doit être invoqué avant le parsing afin d'ouvrir le fichier outAssembleur
+// Doit être invoqué avant le parsing afin d'avoir accès au fichier outAssembleur
 int initTable();
 
 // Renvoie les adresses des variables temporaires précédentes
 int getTemp(int i);
-
-// Doit être invoqué à la fin du parsing pour fermer le fichier outAssembleur
-int finalizeTable();
 
 int putInTable(char * pname, int pinit, int pconst);
 

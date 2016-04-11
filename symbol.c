@@ -4,9 +4,10 @@ int pointeur; //compteur qui indique le 'haut de la pile'
 FILE * pFile;
 int nb_lignes = 0;
 
-int initTable() {
-  pFile=fopen("outAssembleur","w");
-  pointeur = 1; //on commence à 1
+
+int initTable(FILE * fichier) {
+  pFile = fichier;
+  pointeur = 1;
   return 0;
 }
 
@@ -18,17 +19,13 @@ int getTemp(int i) {
   }
 }
 
-int finalizeTable() {
-  fclose (pFile);
-  return 0;
-}
-
 int putInTable(char * pname, int pinit, int pconst) {
   table[pointeur].name = pname;
   table[pointeur].index = pointeur;
   table[pointeur].init = pinit;
   table[pointeur].isConst = pconst;
   table[pointeur].depth = 0;
+  printf("pointeur VAUT : %d, table[pointeur].name : %s, pname : %s\n", pointeur, table[pointeur].name, pname);
   pointeur++;
   return 0;
 }
@@ -39,7 +36,8 @@ int getFromTable(char * pname) {
   int trouve = 0;
   while (i < pointeur && !trouve) {
       if (table[i].name == NULL) {
-          return -1;
+          printf("I VAUT : %d, table[i].name : %s, pname : %s\n", i, table[i].name, pname);
+          return -2;
       }
     if (!strcmp((table[i].name),pname)) {
       pindex = i;
@@ -52,6 +50,7 @@ int getFromTable(char * pname) {
 
 int addTemp() {
   pointeur++;
+  printf("pointeur VAUT : %d\n", pointeur);
   return pointeur-1;
 }
 

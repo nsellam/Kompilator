@@ -20,5 +20,7 @@ EQU        {return tEQU;}
 PRI        {return tPRI;}
 @	   {}
 {NB}       {yylval.integer = atoi(yytext); return tNB;}
+^.        {return tLABEL;}
+"IF"{NB}  {yylval.integer = atoi(yytext); return tIF;}
 
 %%
