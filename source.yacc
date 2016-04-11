@@ -60,9 +60,9 @@ Instrs : If Instrs
        | Body
        | ;
 
-If : tIF {ajouterLabelIf(nb_lignes);} tPO Cond tPF Body;
+If : tIF tPO Cond tPF {ass_jmf(getTemp(1), -1);} Body {ajouterLabelIf(nb_lignes);};
 
-While : tWHILE {ajouterLabelWhile(nb_lignes);} tPO Cond tPF Body;
+While : tWHILE tPO Cond tPF {ass_jmf(getTemp(1), -1);} Body {ajouterLabelWhile(nb_lignes);};
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
       | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));};

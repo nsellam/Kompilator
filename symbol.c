@@ -102,13 +102,13 @@ int ass_afc(int adr_result, int val) {
 }
 
 int ass_jmp(int num_instruct) {
-    fprintf(pFile, "JMP [%d]\n", num_instruct);
+    fprintf(pFile, "JMP instruc:%d]\n", num_instruct);
     nb_lignes++;
     return 0;
 }
 
 int ass_jmf(int adr_x, int num_instruct) {
-    fprintf(pFile, "JMF [%d] [%d]\n", adr_x, num_instruct);
+    fprintf(pFile, "JMF @%d instruc:%d\n", adr_x, num_instruct);
     nb_lignes++;
     return 0;
 }
