@@ -66,7 +66,6 @@ int ajouterLabelFonction(char * nom_fonction, int ligne) {
 }
 
 int remplacerLabels(FILE * fichier) {
-    printf("VA NIQUER");
     char carac;
     char nomLabel[10];
     int nb_char_ligne_actuelle = 0;
@@ -74,7 +73,6 @@ int remplacerLabels(FILE * fichier) {
         nb_char_ligne_actuelle = SEEK_CUR - nb_char_ligne_actuelle;
         if (carac == '.') {
             fscanf(fichier, "%s", nomLabel);
-            printf("nomLabel : %s\n", nomLabel);
             fseek(fichier, -strlen(nomLabel)-1, SEEK_CUR);
             fprintf(fichier, "%*d\n", (int)(strlen(nomLabel)+1), getLabelLine(nomLabel)+1);
         }
