@@ -12,6 +12,7 @@
 %token tPRINT tIF tWHILE tFOR tELSE tRET
 %token tOR tAND tNOT
 %token tLT tGT tLE tGE tEGALEGAL
+%token tESPER
 %start Input
 %union
  {
@@ -40,12 +41,16 @@ DMain : tINT tMAIN tPO tPF Body
       | tINT tMAIN tPO tVOID tPF Body;
 
 Type : tVOID
-     | tINT ;
+     | tINT;
 
-Params : Type tID SuiteParams
+Adresse : tESPER tID;
+
+Params : Type tID SuiteParams {putInTable($2, 0, 0);}
+       | Type tMUL tID SuiteParams {putInTable($3, 0, 0);}
        | ;
 
 SuiteParams : tVIR tINT tID SuiteParams
+            | tVIR tINT tMUL tID SuiteParams
             | ;
 
 Body : tAO Instrs tAF;
@@ -56,6 +61,7 @@ Instrs : If Instrs
        | Decl Instrs
        | Affect Instrs
        | Declaff Instrs
+       | Adresse Instrs
        | Return
        | Body
        | ;
@@ -70,7 +76,8 @@ Print : tPRINT tPO tGUI Text tGUI tPF tPV
 Text : tTEXT Text
      | ;
 
-Return : tRET tID;
+Return : tRET tID tPV
+       | tRET tNB tPV;
 
 Cond : Expr tLT Expr {ass_inf(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tGT Expr {ass_sup(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
@@ -89,17 +96,22 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | tPO Expr tPF {$$ = $2;}
      | tNB {ass_afc(addTemp(),$1);}
      | tID {if (getFromTable($1) == -1){printf("Fatal Error : Variable not found\n"); exit;} ass_cop(addTemp(),getFromTable($1));}
+     | tESPER tID {int adresse; if (getFromTable($2) == -1){printf("Fatal Error : Variable not found\n"); exit;} else {adresse = getFromTable($2);} ass_cop(addTemp(),getFromTableByAddr(adresse));}
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
 
-Decl : tINT SuiteDecl tPV;
+Decl : tINT SuiteDecl tPV
+     | tINT tMUL SuiteDecl tPV;
 
 SuiteDecl : SuiteDecl tVIR tID {putInTable($3, 0, 0);}
           | tID {putInTable($1, 0, 0);};
 
-Declaff : tINT tID tEQU Expr tPV {putInTable($2,0,0); ass_cop(getFromTable($2),getFromTable($2)-1);}
-        | tCONST tINT tID tEQU Expr tPV {ass_cop(getFromTable($3),$5);};
+Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0); ass_cop(getFromTable($2),getFromTable($2)-1);}
+        | tINT tMUL tID tEQU Adresse tPV {putInTable($3,1,0); ass_cop(getFromTable($3),getFromTable($3)-1);}
+        | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1); ass_cop(getFromTable($3),getFromTable($3)-1);}
+        | tCONST tINT tMUL tID tEQU Adresse tPV {putInTable($4,1,1); ass_cop(getFromTable($4),getFromTable($4)-1);};
 
-Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);};
+Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);}
+       | tMUL tID tEQU Expr tPV {ass_cop(getFromTable($2),getTemp(1)); suppTemp(1);};
 
 %%
 int yyerror(char *s) {

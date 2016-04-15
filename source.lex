@@ -42,6 +42,7 @@ TEXT [A-Za-zéèàçùêâîûôëï0-9"-"\']+
 "}"           {printf("[}]"); return tAF;}
 "("           {printf("[(]"); return tPO;}
 ")"           {printf("[)]"); return tPF;}
+"&"           {printf("[&]"); return tESPER;}
 "\""          {printf("[\"]"); return tGUI;}
 "print"f?     {printf("[print]"); return tPRINT;}
 {NB}{E}?      {printf("[entier::%d]", atoi(yytext)); yylval.integer = atoi(yytext); return tNB;}

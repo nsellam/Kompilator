@@ -1,5 +1,12 @@
+int fonction(int * a) {
+    *a = 5;
+    return 0;
+}
+
 int main() {
     int a = 42;
+    int * j;
+    j = &a;
     if (0 == 0) {
         printf(a);
     }

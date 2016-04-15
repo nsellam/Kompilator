@@ -47,6 +47,10 @@ int getFromTable(char * pname) {
   return pindex;
 }
 
+char * getFromTableByAddr(int adresse) {
+    return table[adresse].name;
+}
+
 int addTemp() {
   // On ajoute le caractère 0 dans la table des symboles pour les variables
   //temporaire, car une variable ne peut pas être un 0 et qu'il ne doit pas y
