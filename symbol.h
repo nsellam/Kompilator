@@ -17,7 +17,7 @@ struct symbole table[512];
 int nb_lignes;
 
 // Doit être invoqué avant le parsing afin d'avoir accès au fichier outAssembleur
-int initTable();
+int initTable(FILE * fichier);
 
 // Renvoie les adresses des variables temporaires précédentes
 int getTemp(int i);
@@ -25,6 +25,8 @@ int getTemp(int i);
 int putInTable(char * pname, int pinit, int pconst);
 
 int getFromTable(char * pname);
+
+char * getFromTableByAddr(int adresse);
 
 int addTemp();
 

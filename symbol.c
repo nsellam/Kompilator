@@ -4,7 +4,6 @@ int pointeur; //compteur qui indique le 'haut de la pile'
 FILE * pFile;
 int nb_lignes = 0;
 
-
 int initTable(FILE * fichier) {
   pFile = fichier;
   pointeur = 1;

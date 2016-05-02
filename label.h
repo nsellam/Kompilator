@@ -15,7 +15,7 @@ int nb_while;
 
 struct label table_labels[512];
 
-int initTableLabels();
+int initTableLabels(FILE * fichier);
 
 int ajouterLabelIf(int ligne);
 

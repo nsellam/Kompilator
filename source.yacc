@@ -1,7 +1,14 @@
+/* TODO
+
+Ne manque plus qu'à rajouter le support des fonctions. Et peut-être améliorer l'interpréteur dans un second temps.
+
+*/
+
 %{
 #include <stdio.h>
 #include "symbol.h"
 #include "label.h"
+#include "fonctions.h"
 %}
 
 %error-verbose
@@ -22,6 +29,9 @@
 %token <integer> tNB
 %token <string> tID
 %type <integer> Expr
+%type <integer> Params
+%type <integer> SuiteParams
+%type <integer> Args
 
 %right tEQU
 %left tADD tSUB
@@ -32,7 +42,7 @@
 Input : DFonction Input
       | {printf("THE END\n");};
 
-DFonction : Type tID tPO Params tPF Body
+DFonction : Type tID tPO Params tPF Body {ajouterFonction($2, $4, 0,nb_lignes);}
           | DMain;
 
 DMain : tINT tMAIN tPO tPF Body
@@ -45,13 +55,30 @@ Type : tVOID
 
 Adresse : tESPER tID;
 
-Params : Type tID SuiteParams {putInTable($2, 0, 0);}
-       | Type tMUL tID SuiteParams {putInTable($3, 0, 0);}
-       | ;
+Params : Type tID SuiteParams {putInTable($2, 0, 0); $$ = $3 + 1;}
+       | Type tMUL tID SuiteParams {putInTable($3, 0, 0); $$ = $4 + 1;}
+       | {$$ = 0;};
 
-SuiteParams : tVIR tINT tID SuiteParams {putInTable($3, 0, 0);}
-            | tVIR tINT tMUL tID SuiteParams {putInTable($4, 0, 0);}
-            | ;
+SuiteParams : tVIR tINT tID SuiteParams {putInTable($3, 0, 0); $$ = $4 + 1;}
+            | tVIR tINT tMUL tID SuiteParams {putInTable($4, 0, 0); $$ = $5 + 1;}
+            | {$$ = 0;};
+
+// TODO : Terminer l'implémentation de l'appel des fonctions
+AppelFonction : tID tPO Args tPF tPV {
+                                      int nb_args = $3;
+                                      if (trouverFonction($1) != -1) {
+                                            // TODO verifier si bon nb d'args
+                                            if (nb_args) {
+                                                
+                                            }
+                                      }
+                                      else {
+                                            printf("ERREUR : Le fonction \"%s\" à la ligne %d n'est pas définie !",$1,nb_lignes);
+                                      }
+                                     };
+
+Args : tID Args {$$ = $2 + 1;}
+     | {$$ = 0;};
 
 Body : tAO Instrs tAF;
 
@@ -62,6 +89,7 @@ Instrs : If Instrs
        | Affect Instrs
        | Declaff Instrs
        | Adresse Instrs
+       | AppelFonction Instrs
        | Return
        | Body
        | ;
@@ -137,6 +165,7 @@ void main() {
   FILE * pFile=fopen("outAssembleur","w");
   initTable(pFile);
   initTableLabels(pFile);
+  initTableFonctions(pFile);
   yyparse();
   /*finalizeTable();
   finalizeTableLabels();*/
@@ -147,4 +176,5 @@ void main() {
   // Faire la seconde passe sur l'assembleur
   fclose(pFile);
 
+  printfonctions();
 }
