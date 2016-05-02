@@ -4,14 +4,16 @@ int fonction(int * a) {
 }
 
 int main() {
-    int a = 42;
+    int a;
+    a = 42;
+    a = a + 1;
     int * j;
     j = &a;
     if (0 == 0) {
         printf(a);
     }
     int i = 0;
-    while (i < a) {
+    while (i < *j) {
         printf(i);
         i = i + 1;
     }

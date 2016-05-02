@@ -49,8 +49,8 @@ Params : Type tID SuiteParams {putInTable($2, 0, 0);}
        | Type tMUL tID SuiteParams {putInTable($3, 0, 0);}
        | ;
 
-SuiteParams : tVIR tINT tID SuiteParams
-            | tVIR tINT tMUL tID SuiteParams
+SuiteParams : tVIR tINT tID SuiteParams {putInTable($3, 0, 0);}
+            | tVIR tINT tMUL tID SuiteParams {putInTable($4, 0, 0);}
             | ;
 
 Body : tAO Instrs tAF;
@@ -71,7 +71,8 @@ If : tIF tPO Cond tPF {char * nom = ".IF"; char nomLabel[10]; sprintf(nomLabel,"
 While : tWHILE tPO Cond tPF {char * nom = ".WHILE"; char nomLabel[10]; sprintf(nomLabel,"%s%d",nom, nb_while); ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelWhile(nb_lignes);};
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
-      | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));};
+      | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));}
+      | tPRINT tPO tMUL tID tPF tPV {char * varPointee = getFromTableByAddr(getFromTable($4)); ass_pri(getFromTable(varPointee));};
 
 Text : tTEXT Text
      | ;
@@ -96,14 +97,27 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | tPO Expr tPF {$$ = $2;}
      | tNB {ass_afc(addTemp(),$1);}
      | tID {if (getFromTable($1) == -1){printf("Fatal Error : Variable not found\n"); exit;} ass_cop(addTemp(),getFromTable($1));}
-     | tESPER tID {int adresse; if (getFromTable($2) == -1){printf("Fatal Error : Variable not found\n"); exit;} else {adresse = getFromTable($2);} ass_cop(addTemp(),getFromTableByAddr(adresse));}
+     | tMUL tID {if (getFromTable($2) == -1){printf("Fatal Error : Variable not found\n"); exit;} char * varPointee = getFromTableByAddr(getFromTable($2)); ass_cop(addTemp(),getFromTable(varPointee));}
+     | tESPER tID { int adresse;
+                    if (getFromTable($2) == -1) {
+                        printf("Fatal Error : Variable not found\n");
+                        exit;
+                    }
+                    else {
+                        printf("ADRESSE AVANT = %d\n",adresse);
+                        adresse = getFromTable($2);
+                        printf("ADRESSE APRES = %d\n",adresse);
+                    }
+                    ass_cop(addTemp(),adresse);
+                  }
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
 
-Decl : tINT SuiteDecl tPV
-     | tINT tMUL SuiteDecl tPV;
+Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0);}
+     | tINT tMUL tID SuiteDecl tPV {putInTable($3, 0, 0);};
 
-SuiteDecl : SuiteDecl tVIR tID {putInTable($3, 0, 0);}
-          | tID {putInTable($1, 0, 0);};
+SuiteDecl : tVIR tINT tID SuiteDecl {putInTable($3, 0, 0);}
+          | tVIR tINT tMUL tID SuiteDecl {putInTable($4, 0, 0);}
+          | ;
 
 Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0); ass_cop(getFromTable($2),getFromTable($2)-1);}
         | tINT tMUL tID tEQU Adresse tPV {putInTable($3,1,0); ass_cop(getFromTable($3),getFromTable($3)-1);}
