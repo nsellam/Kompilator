@@ -1,14 +1,15 @@
-int fonction(int * a) {
+/*int fonction(int * a) {
     *a = 5;
     return 0;
-}
+}*/
 
 int main() {
     int a;
     a = 42;
     a = a + 1;
     int * j;
-    fonction(&a);
+    int tab[10];
+    //fonction(&a);
     j = &a;
     if (0 == 0) {
         printf(a);

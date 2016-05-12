@@ -1,6 +1,7 @@
 /* TODO
 
-Ne manque plus qu'à rajouter le support des fonctions. Et peut-être améliorer l'interpréteur dans un second temps.
+Les fonctions ne marchent pas (renvoie à la mauvaise ligne et de retourne pas à la suite de l'exécution).
+Pour l'instant les tableaux cassent le système de pointeur de symbol.c
 
 */
 
@@ -15,7 +16,7 @@ Ne manque plus qu'à rajouter le support des fonctions. Et peut-être améliorer
 %token tMAIN
 %token tCONST tINT tVOID tTEXT
 %token tADD tSUB tMUL tDIV tEQU
-%token tVIR tPV tAO tAF tPO tPF tGUI
+%token tVIR tPV tAO tAF tPO tPF tGUI tCRO tCRF
 %token tPRINT tIF tWHILE tFOR tELSE tRET
 %token tOR tAND tNOT
 %token tLT tGT tLE tGE tEGALEGAL
@@ -55,15 +56,14 @@ Type : tVOID
 
 Adresse : tESPER tID;
 
-Params : Type tID SuiteParams {putInTable($2, 0, 0); $$ = $3 + 1;}
-       | Type tMUL tID SuiteParams {putInTable($3, 0, 0); $$ = $4 + 1;}
+Params : Type tID SuiteParams {putInTable($2, 0, 0,1); $$ = $3 + 1;}
+       | Type tMUL tID SuiteParams {putInTable($3, 0, 0,1); $$ = $4 + 1;}
        | {$$ = 0;};
 
-SuiteParams : tVIR tINT tID SuiteParams {putInTable($3, 0, 0); $$ = $4 + 1;}
-            | tVIR tINT tMUL tID SuiteParams {putInTable($4, 0, 0); $$ = $5 + 1;}
+SuiteParams : tVIR tINT tID SuiteParams {putInTable($3, 0, 0,1); $$ = $4 + 1;}
+            | tVIR tINT tMUL tID SuiteParams {putInTable($4, 0, 0,1); $$ = $5 + 1;}
             | {$$ = 0;};
 
-// TODO : Terminer l'implémentation de l'appel des fonctions
 AppelFonction : tID tPO Args tPF tPV {
                                       int nb_args = $3;
                                       int error = 0;
@@ -144,19 +144,28 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
                     }
                     ass_cop(addTemp(),adresse);
                   }
+     | tID tCRO tNB tCRF {int nbValeurs = getNbVals($1);
+                          if (getFromTable($1) == -1) {
+                              printf("Fatal Error : Variable not found\n");
+                          }
+                          else if (nbValeurs != $3) {
+                              printf("ERREUR : Vous accédez à une case mémoire qui n'appartient pas à la variable %s",$1);
+                          }
+                          else ass_cop(addTemp(),getFromTable($1+$3));}
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
 
-Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0);}
-     | tINT tMUL tID SuiteDecl tPV {putInTable($3, 0, 0);};
+Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0, 1);}
+     | tINT tID SuiteDecl tCRO tNB tCRF tPV {putInTable($2, 0, 0, $5);}
+     | tINT tMUL tID SuiteDecl tPV {putInTable($3, 0, 0, 1);};
 
-SuiteDecl : tVIR tINT tID SuiteDecl {putInTable($3, 0, 0);}
-          | tVIR tINT tMUL tID SuiteDecl {putInTable($4, 0, 0);}
+SuiteDecl : tVIR tINT tID SuiteDecl {putInTable($3, 0, 0, 1);}
+          | tVIR tINT tMUL tID SuiteDecl {putInTable($4, 0, 0, 1);}
           | ;
 
-Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0); ass_cop(getFromTable($2),getFromTable($2)-1);}
-        | tINT tMUL tID tEQU Adresse tPV {putInTable($3,1,0); ass_cop(getFromTable($3),getFromTable($3)-1);}
-        | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1); ass_cop(getFromTable($3),getFromTable($3)-1);}
-        | tCONST tINT tMUL tID tEQU Adresse tPV {putInTable($4,1,1); ass_cop(getFromTable($4),getFromTable($4)-1);};
+Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0,1); ass_cop(getFromTable($2),getFromTable($2)-1);}
+        | tINT tMUL tID tEQU Adresse tPV {putInTable($3,1,0,1); ass_cop(getFromTable($3),getFromTable($3)-1);}
+        | tCONST tINT tID tEQU Expr tPV {putInTable($3,1,1,1); ass_cop(getFromTable($3),getFromTable($3)-1);}
+        | tCONST tINT tMUL tID tEQU Adresse tPV {putInTable($4,1,1,1); ass_cop(getFromTable($4),getFromTable($4)-1);};
 
 Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);}
        | tMUL tID tEQU Expr tPV {ass_cop(getFromTable($2),getTemp(1)); suppTemp(1);};

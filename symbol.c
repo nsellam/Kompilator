@@ -18,22 +18,27 @@ int getTemp(int i) {
   }
 }
 
-int putInTable(char * pname, int pinit, int pconst) {
+int putInTable(char * pname, int pinit, int pconst, int nb_valeurs) {
+    printf("\nPointeur avant ajout : %d\n", pointeur);
   table[pointeur].name = pname;
   table[pointeur].index = pointeur;
   table[pointeur].init = pinit;
   table[pointeur].isConst = pconst;
   table[pointeur].depth = 0;
-  pointeur++;
+  table[pointeur].nb_valeurs = nb_valeurs;
+  pointeur+=nb_valeurs;
+  printf("\nPointeur après ajout : %d\n", pointeur);
   return 0;
 }
 
+//TODO: A débugger depuis l'ajout des tableaux
 int getFromTable(char * pname) {
   int i = 1;
   int pindex = -1;
   int trouve = 0, null = 0;
   while (i <= pointeur && !trouve && !null) {
       if (table[i].name == NULL) {
+          printf("\nOOOOOOOOOOOOOMMMMMMMMMMMMGGGGGGGGGGGGG\n");
           null = 1;
           pindex = -1;
       }
@@ -44,6 +49,20 @@ int getFromTable(char * pname) {
     i++;
   }
   return pindex;
+}
+
+int getNbVals(char * pname) {
+    int trouve = 0, null = 0, i = 0;
+    while (i <= pointeur && !trouve && !null) {
+        if (table[i].name == NULL) {
+            null = 1;
+        }
+      if (!strcmp((table[i].name),pname)) {
+        trouve = table[i].nb_valeurs;
+      }
+      i++;
+    }
+    return trouve;
 }
 
 char * getFromTableByAddr(int adresse) {

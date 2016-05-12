@@ -11,6 +11,7 @@ struct symbole {
   int init;
   int isConst;
   int depth;
+  int nb_valeurs;
 } ;
 
 struct symbole table[512];
@@ -22,7 +23,9 @@ int initTable(FILE * fichier);
 // Renvoie les adresses des variables temporaires précédentes
 int getTemp(int i);
 
-int putInTable(char * pname, int pinit, int pconst);
+int putInTable(char * pname, int pinit, int pconst, int nb_valeurs);
+
+int getNbVals(char * pname);
 
 int getFromTable(char * pname);
 
