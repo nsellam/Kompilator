@@ -8,6 +8,7 @@ int main() {
     a = 42;
     a = a + 1;
     int * j;
+    fonction(&a);
     j = &a;
     if (0 == 0) {
         printf(a);

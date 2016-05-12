@@ -105,7 +105,7 @@ int ass_afc(int adr_result, int val) {
 }
 
 int ass_jmp(int num_instruct) {
-    fprintf(pFile, "JMP instruc:%d]\n", num_instruct);
+    fprintf(pFile, "JMP instruc:%d\n", num_instruct);
     nb_lignes++;
     return 0;
 }

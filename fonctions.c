@@ -25,15 +25,16 @@ int ajouterFonction(char * name, int nb_params, int profondeur, int ligne) {
     return 0;
 }
 
-// TODO : Trouver une bonne valeur à renvoyer par défaut, ou alors en faire différentes sous fonctions suivant ce qui est recherché
-struct fonction trouverFonction(char * name) {
+struct fonction trouverFonction(char * name, int * err) {
+    struct fonction f;
     int i;
     for (i = 0; i < nb_fonctions; i++) {
         if (strcmp(table_fonctions[i].nom,name) == 0) {
             return table_fonctions[i];
         }
     }
-    return ;
+    *err = -1;
+    return f;
 }
 
 void printfonctions() {

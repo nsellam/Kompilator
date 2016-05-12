@@ -66,18 +66,24 @@ SuiteParams : tVIR tINT tID SuiteParams {putInTable($3, 0, 0); $$ = $4 + 1;}
 // TODO : Terminer l'implémentation de l'appel des fonctions
 AppelFonction : tID tPO Args tPF tPV {
                                       int nb_args = $3;
-                                      if (trouverFonction($1) != -1) {
+                                      int error = 0;
+                                      struct fonction f = trouverFonction($1,&error);
+                                      if (error == 0) {
                                             // TODO verifier si bon nb d'args
-                                            if (nb_args) {
-                                                
+                                            if (nb_args == f.nb_params) {
+                                                ass_jmp(f.ligne);
+                                            }
+                                            else {
+                                                printf("ERREUR : La fonction \"%s\" à la ligne %d a %d paramètres alors qu'elle en attendait %d !",$1,nb_lignes,$3,f.nb_params);
                                             }
                                       }
                                       else {
-                                            printf("ERREUR : Le fonction \"%s\" à la ligne %d n'est pas définie !",$1,nb_lignes);
+                                            printf("ERREUR : La fonction \"%s\" à la ligne %d n'est pas définie !",$1,nb_lignes);
                                       }
                                      };
 
 Args : tID Args {$$ = $2 + 1;}
+     | Adresse Args {$$ = $2 + 1;}
      | {$$ = 0;};
 
 Body : tAO Instrs tAF;

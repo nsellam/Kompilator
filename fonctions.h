@@ -16,7 +16,7 @@ int initTableFonctions(FILE * fichier);
 
 int ajouterFonction(char * name, int nb_params, int profondeur, int ligne);
 
-struct fonction trouverFonction(char * name);
+struct fonction trouverFonction(char * name, int * err);
 
 void printfonctions();
 
