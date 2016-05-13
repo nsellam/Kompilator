@@ -74,11 +74,11 @@ AppelFonction : tID tPO Args tPF tPV {
                                                 ass_jmp(f.ligne);
                                             }
                                             else {
-                                                printf("ERREUR : La fonction \"%s\" à la ligne %d a %d paramètres alors qu'elle en attendait %d !",$1,nb_lignes,$3,f.nb_params);
+                                                printf("\nERREUR : La fonction \"%s\" à la ligne %d a %d paramètres alors qu'elle en attendait %d !",$1,nb_lignes,$3,f.nb_params);
                                             }
                                       }
                                       else {
-                                            printf("ERREUR : La fonction \"%s\" à la ligne %d n'est pas définie !",$1,nb_lignes);
+                                            printf("\nERREUR : La fonction \"%s\" à la ligne %d n'est pas définie !",$1,nb_lignes);
                                       }
                                      };
 
@@ -106,7 +106,8 @@ While : tWHILE tPO Cond tPF {char * nom = ".WHILE"; char nomLabel[10]; sprintf(n
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
       | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));}
-      | tPRINT tPO tMUL tID tPF tPV {char * varPointee = getFromTableByAddr(getFromTable($4)); ass_pri(getFromTable(varPointee));};
+      | tPRINT tPO tMUL tID tPF tPV {char * varPointee = getFromTableByAddr(getFromTable($4)); ass_pri(getFromTable(varPointee));}
+      | tPRINT tPO tID tCRO tNB tCRF tPF tPV {ass_pri(getFromTable($3)+$5);};
 
 Text : tTEXT Text
      | ;
@@ -130,11 +131,11 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tDIV Expr {ass_div(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | tPO Expr tPF {$$ = $2;}
      | tNB {ass_afc(addTemp(),$1);}
-     | tID {if (getFromTable($1) == -1){printf("Fatal Error : Variable not found\n"); exit;} ass_cop(addTemp(),getFromTable($1));}
-     | tMUL tID {if (getFromTable($2) == -1){printf("Fatal Error : Variable not found\n"); exit;} char * varPointee = getFromTableByAddr(getFromTable($2)); ass_cop(addTemp(),getFromTable(varPointee));}
+     | tID {if (getFromTable($1) == -1){printf("\nFatal Error : Variable %s not found\n",$1); exit;} ass_cop(addTemp(),getFromTable($1));}
+     | tMUL tID {if (getFromTable($2) == -1){printf("\nFatal Error : Variable not found\n"); exit;} char * varPointee = getFromTableByAddr(getFromTable($2)); ass_cop(addTemp(),getFromTable(varPointee));}
      | tESPER tID { int adresse;
                     if (getFromTable($2) == -1) {
-                        printf("Fatal Error : Variable not found\n");
+                        printf("\nFatal Error : Variable not found\n");
                         exit;
                     }
                     else {
@@ -144,14 +145,14 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
                     }
                     ass_cop(addTemp(),adresse);
                   }
-     | tID tCRO tNB tCRF {int nbValeurs = getNbVals($1);
+     | tID tCRO tNB tCRF {int tailleTableau = getNbVals($1);
                           if (getFromTable($1) == -1) {
-                              printf("Fatal Error : Variable not found\n");
+                              printf("\nFatal Error : Variable not found\n");
                           }
-                          else if (nbValeurs != $3) {
-                              printf("ERREUR : Vous accédez à une case mémoire qui n'appartient pas à la variable %s",$1);
+                          else if ($3 < 0 || $3 >= tailleTableau) {
+                              printf("\nERREUR : Vous accédez à une case mémoire qui n'appartient pas à la variable %s",$1);
                           }
-                          else ass_cop(addTemp(),getFromTable($1+$3));}
+                          else ass_cop(addTemp(),getFromTable($1)+$3);}
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
 
 Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0, 1);}
@@ -160,6 +161,7 @@ Decl : tINT tID SuiteDecl tPV {putInTable($2, 0, 0, 1);}
 
 SuiteDecl : tVIR tINT tID SuiteDecl {putInTable($3, 0, 0, 1);}
           | tVIR tINT tMUL tID SuiteDecl {putInTable($4, 0, 0, 1);}
+          | tVIR tID SuiteDecl {putInTable($2, 0, 0, 1);}
           | ;
 
 Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0,1); ass_cop(getFromTable($2),getFromTable($2)-1);}
@@ -168,28 +170,37 @@ Declaff : tINT tID tEQU Expr tPV {putInTable($2,1,0,1); ass_cop(getFromTable($2)
         | tCONST tINT tMUL tID tEQU Adresse tPV {putInTable($4,1,1,1); ass_cop(getFromTable($4),getFromTable($4)-1);};
 
 Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);}
-       | tMUL tID tEQU Expr tPV {ass_cop(getFromTable($2),getTemp(1)); suppTemp(1);};
+       | tMUL tID tEQU Expr tPV {ass_cop(getFromTable($2),getTemp(1)); suppTemp(1);}
+       | tID tCRO tNB tCRF tEQU Expr tPV {int tailleTableau = getNbVals($1);
+                            if (getFromTable($1) == -1) {
+                                printf("\nFatal Error : Variable not found\n");
+                            }
+                            else if ($3 < 0 || $3 >= tailleTableau) {
+                                printf("\nERREUR : Vous accédez à une case mémoire qui n'appartient pas à la variable %s",$1);
+                            }
+                            else ass_cop(getFromTable($1)+$3,getTemp(1)); printf("suppTemp");suppTemp(1);
+                            };
 
 %%
 int yyerror(char *s) {
-  fprintf(stdout, "Fatal Error de Syntaxe de la Mort : %s\n", s);
-  return 0;
+    fprintf(stdout, "\nFatal Error de Syntaxe de la Mort : %s\n", s);
+    return 0;
 }
 
 void main() {
-  FILE * pFile=fopen("outAssembleur","w");
-  initTable(pFile);
-  initTableLabels(pFile);
-  initTableFonctions(pFile);
-  yyparse();
-  /*finalizeTable();
-  finalizeTableLabels();*/
-  fclose(pFile);
+    FILE * pFile=fopen("outAssembleur","w");
+    initTable(pFile);
+    initTableLabels(pFile);
+    initTableFonctions(pFile);
+    yyparse();
+    /*finalizeTable();
+    finalizeTableLabels();*/
+    fclose(pFile);
 
-  pFile=fopen("outAssembleur","r+");
-  remplacerLabels(pFile);
-  // Faire la seconde passe sur l'assembleur
-  fclose(pFile);
+    pFile=fopen("outAssembleur","r+");
+    remplacerLabels(pFile);
+    // Faire la seconde passe sur l'assembleur
+    fclose(pFile);
 
-  printfonctions();
+    printfonctions();
 }

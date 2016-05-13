@@ -9,6 +9,9 @@ int main() {
     a = a + 1;
     int * j;
     int tab[10];
+    tab[0] = 1994;
+    tab[9] = 2000;
+    tab[1] = tab[0] + 1;
     //fonction(&a);
     j = &a;
     if (0 == 0) {
@@ -19,9 +22,11 @@ int main() {
         printf(i);
         i = i + 1;
     }
+    printf(tab[1]);
 }
 
-/*{ int i,j,k,r;
+/*int main() {
+    int i,j,k,r;
     i = 3;
     j = 4;
     k = 8;
