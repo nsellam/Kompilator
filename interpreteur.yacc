@@ -67,5 +67,6 @@ int yyerror(char *s) {
 
 
 void main() {
+    char * [2048] instructions;
     yyparse();
 }
