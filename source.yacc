@@ -10,6 +10,8 @@ Pour l'instant les tableaux cassent le système de pointeur de symbol.c
 #include "symbol.h"
 #include "label.h"
 #include "fonctions.h"
+
+char nomLabel[10];
 %}
 
 %error-verbose
@@ -100,9 +102,16 @@ Instrs : If Instrs
        | Body
        | ;
 
-If : tIF tPO Cond tPF {char * nom = ".IF"; char nomLabel[10]; sprintf(nomLabel,"%s%d",nom, nb_if); ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelIf(nb_lignes);};
+If : tIF tPO Cond tPF {char * nom = ".IF"; char nomLabel[10]; sprintf(nomLabel,"%s%d",nom, nb_if); ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelIf(nb_lignes-1);};
 
-While : tWHILE tPO Cond tPF {char * nom = ".WHILE"; char nomLabel[10]; sprintf(nomLabel,"%s%d",nom, nb_while); ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelWhile(nb_lignes);};
+// TODO : Faire le JMP qui remonte au debut du while
+While : tWHILE tPO Cond tPF {char * nom = ".WHILE";
+                             sprintf(nomLabel,"%s%d",nom, nb_while);
+                             ass_jmf(getTemp(1), nomLabel);
+                             memmove (nomLabel, nomLabel+1, strlen (nomLabel+1) + 1);
+                             ajouterLabelWhile(nomLabel,nb_lignes-2);} Body {ajouterFinWhile(nomLabel, nb_lignes);
+                                                                                 //memmove (nomLabel, nomLabel+1, strlen (nomLabel+1) + 1);
+                                                                                 ass_jmp(getLigneDebutWhile(nomLabel));};
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
       | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));}
@@ -139,9 +148,7 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
                         exit;
                     }
                     else {
-                        printf("ADRESSE AVANT = %d\n",adresse);
                         adresse = getFromTable($2);
-                        printf("ADRESSE APRES = %d\n",adresse);
                     }
                     ass_cop(addTemp(),adresse);
                   }
@@ -189,6 +196,7 @@ int yyerror(char *s) {
 
 void main() {
     FILE * pFile=fopen("outAssembleur","w");
+
     initTable(pFile);
     initTableLabels(pFile);
     initTableFonctions(pFile);
@@ -200,6 +208,7 @@ void main() {
     pFile=fopen("outAssembleur","r+");
     remplacerLabels(pFile);
     // Faire la seconde passe sur l'assembleur
+    fprintf(pFile, "END");
     fclose(pFile);
 
     printfonctions();

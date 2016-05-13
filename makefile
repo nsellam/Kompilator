@@ -9,8 +9,8 @@ y.tab.c: source.yacc
 lex.yy.c: source.lex
 	flex source.lex
 
-interpreteur: y.interp.c lexinterp.yy.c
-	gcc -g y.interp.c lexinterp.yy.c -ll -o interpreteur
+interpreteur: y.interp.c lexinterp.yy.c interpreteur.c
+	gcc -g y.interp.c lexinterp.yy.c interpreteur.c -ll -o interpreteur
 
 y.interp.c: interpreteur.yacc
 	yacc -d interpreteur.yacc -o y.interp.c

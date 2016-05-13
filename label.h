@@ -8,6 +8,7 @@
 struct label {
     char * nom;
     int ligne;
+    int ligne_debut_while;
 };
 
 int nb_if;
@@ -19,7 +20,11 @@ int initTableLabels(FILE * fichier);
 
 int ajouterLabelIf(int ligne);
 
-int ajouterLabelWhile(int ligne);
+int ajouterLabelWhile(char * nomLabel,int ligne);
+
+int ajouterFinWhile(char* nomLabel, int ligne);
+
+int getLigneDebutWhile(char* nomLabel);
 
 int ajouterLabelFonction(char * nom_fonction, int ligne);
 

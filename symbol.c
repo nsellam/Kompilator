@@ -19,7 +19,6 @@ int getTemp(int i) {
 }
 
 int putInTable(char * pname, int pinit, int pconst, int nb_valeurs) {
-    printf("\nPointeur avant ajout : %d\n", pointeur);
     int i;
     for (i = 0; i<nb_valeurs;i++) {
         table[pointeur].name = pname;
@@ -30,7 +29,6 @@ int putInTable(char * pname, int pinit, int pconst, int nb_valeurs) {
         table[pointeur].nb_valeurs = nb_valeurs;
         pointeur++;
     }
-    printf("\nPointeur après ajout : %d\n", pointeur);
     return 0;
 }
 
@@ -125,7 +123,7 @@ int ass_afc(int adr_result, int val) {
 }
 
 int ass_jmp(int num_instruct) {
-    fprintf(pFile, "JMP instruc:%d\n", num_instruct);
+    fprintf(pFile, "JMP %d\n", num_instruct);
     nb_lignes++;
     return 0;
 }

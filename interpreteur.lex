@@ -18,6 +18,7 @@ INF        {return tINF;}
 SUP        {return tSUP;}
 EQU        {return tEQU;}
 PRI        {return tPRI;}
+END        {return tEND;}
 @	   {}
 {NB}       {yylval.integer = atoi(yytext); return tNB;}
 ^.        {return tLABEL;}
