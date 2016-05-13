@@ -4,29 +4,28 @@ int nb_labels;
 FILE * pFile;
 
 int initTableLabels(FILE * fichier) {
-  pFile = fichier;
-  nb_labels = 0;
-  nb_if = 0;
-  nb_while = 0;
-  return 0;
+    pFile = fichier;
+    nb_labels = 0;
+    nb_if = 0;
+    nb_while = 0;
+    return 0;
 }
 
 int ajouterLabelIf(int ligne) {
-    printf("\nIf ajouté en ligne %d\n",ligne);
+    //printf("\nIf ajouté en ligne %d\n",ligne);
     char * nom = "IF";
     char nomLabel[10];
     sprintf(nomLabel,"%s%d",nom, nb_if);
     table_labels[nb_labels].nom = malloc(sizeof(nomLabel));
     strcpy(table_labels[nb_labels].nom,nomLabel);
     table_labels[nb_labels].ligne = ligne;
-    //fprintf(pFile, "%s\n", nomLabel);
     nb_labels++;
     nb_if++;
     return 0;
 }
 
 int ajouterLabelWhile(char * nomLabel,int ligne) {
-    printf("\nDébut while %s ajouté en ligne %d\n",nomLabel,ligne);
+    //printf("\nDébut while %s ajouté en ligne %d\n",nomLabel,ligne);
     /*char * nom = "WHILE";
     char nomLabel[10];
     sprintf(nomLabel,"%s%d",nom,nb_while);*/
@@ -48,7 +47,7 @@ void printLabels() {
 }
 
 int ajouterFinWhile(char* nomLabel, int ligne) {
-    printf("Fin while ajouté en ligne %d à %s",ligne,nomLabel);
+    //printf("Fin while ajouté en ligne %d à %s",ligne,nomLabel);
     /*table_labels[nb_labels].nom = malloc(sizeof(nomLabel));
     strcpy(table_labels[nb_labels].nom,nomLabel);*/
     int i = 0;
@@ -61,7 +60,6 @@ int ajouterFinWhile(char* nomLabel, int ligne) {
         }
         i++;
     }
-    //fprintf(pFile, "%s\n", nomLabel);
     return trouve;
 }
 
@@ -81,7 +79,7 @@ int getLabelLine(char * nomLabel) {
     int i = 0;
     int trouve = 0;
     while (i < nb_labels && !trouve) {
-        printf("nomLabel: %s, table_labels[i].nom: %s, table_labels[i].ligne: %d\n",nomLabel,table_labels[i].nom,table_labels[i].ligne);
+        //printf("nomLabel: %s, table_labels[i].nom: %s, table_labels[i].ligne: %d\n",nomLabel,table_labels[i].nom,table_labels[i].ligne);
         if (!strcmp(nomLabel, table_labels[i].nom)) {
             trouve = table_labels[i].ligne;
         }
@@ -114,7 +112,7 @@ int remplacerLabels(FILE * fichier) {
         nb_char_ligne_actuelle = SEEK_CUR - nb_char_ligne_actuelle;
         if (carac == '.') {
             fscanf(fichier, "%s", nomLabel);
-            printf("Label qui va être remplacé : %s, sa ligne : %d\n",nomLabel,getLabelLine(nomLabel)+1);
+            //printf("Label qui va être remplacé : %s, sa ligne : %d\n",nomLabel,getLabelLine(nomLabel)+1);
             fseek(fichier, -strlen(nomLabel)-1, SEEK_CUR);
             fprintf(fichier, "%*d\n", (int)(strlen(nomLabel)+1), getLabelLine(nomLabel)+1);
         }

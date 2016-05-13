@@ -18,6 +18,7 @@ int add_instruct(COP, res, op1, op2) {
 int interprete() {
     int ret = 0;
     struct instruction instruc = instructions[ip];
+    // Le i n'est là que pour le débug, afin de ne pas boucler à l'infini
     int i = 0;
     while (i < 400 && instruc.COP != 13) {
         i++;

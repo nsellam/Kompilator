@@ -1,7 +1,8 @@
 /* TODO
 
 Les fonctions ne marchent pas (renvoie à la mauvaise ligne et de retourne pas à la suite de l'exécution).
-Pour l'instant les tableaux cassent le système de pointeur de symbol.c
+Pendant un while à l'interprétation, les variables temporaires du test sont écrasées par les opérations
+effectués dans le bloc while.
 
 */
 
@@ -71,7 +72,6 @@ AppelFonction : tID tPO Args tPF tPV {
                                       int error = 0;
                                       struct fonction f = trouverFonction($1,&error);
                                       if (error == 0) {
-                                            // TODO verifier si bon nb d'args
                                             if (nb_args == f.nb_params) {
                                                 ass_jmp(f.ligne);
                                             }
@@ -104,13 +104,11 @@ Instrs : If Instrs
 
 If : tIF tPO Cond tPF {char * nom = ".IF"; char nomLabel[10]; sprintf(nomLabel,"%s%d",nom, nb_if); ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelIf(nb_lignes-1);};
 
-// TODO : Faire le JMP qui remonte au debut du while
 While : tWHILE tPO Cond tPF {char * nom = ".WHILE";
                              sprintf(nomLabel,"%s%d",nom, nb_while);
                              ass_jmf(getTemp(1), nomLabel);
-                             memmove (nomLabel, nomLabel+1, strlen (nomLabel+1) + 1);
+                             memmove (nomLabel, nomLabel+1, strlen (nomLabel+1) + 1); //Supprime le "."
                              ajouterLabelWhile(nomLabel,nb_lignes-2);} Body {ajouterFinWhile(nomLabel, nb_lignes);
-                                                                                 //memmove (nomLabel, nomLabel+1, strlen (nomLabel+1) + 1);
                                                                                  ass_jmp(getLigneDebutWhile(nomLabel));};
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
@@ -140,11 +138,11 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tDIV Expr {ass_div(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | tPO Expr tPF {$$ = $2;}
      | tNB {ass_afc(addTemp(),$1);}
-     | tID {if (getFromTable($1) == -1){printf("\nFatal Error : Variable %s not found\n",$1); exit;} ass_cop(addTemp(),getFromTable($1));}
-     | tMUL tID {if (getFromTable($2) == -1){printf("\nFatal Error : Variable not found\n"); exit;} char * varPointee = getFromTableByAddr(getFromTable($2)); ass_cop(addTemp(),getFromTable(varPointee));}
+     | tID {if (getFromTable($1) == -1){printf("\nERREUR : La variable %s n'existe pas.\n",$1); exit;} ass_cop(addTemp(),getFromTable($1));}
+     | tMUL tID {if (getFromTable($2) == -1){printf("\nERREUR : La variable %s n'existe pas.\n",$2); exit;} char * varPointee = getFromTableByAddr(getFromTable($2)); ass_cop(addTemp(),getFromTable(varPointee));}
      | tESPER tID { int adresse;
                     if (getFromTable($2) == -1) {
-                        printf("\nFatal Error : Variable not found\n");
+                        printf("\nERREUR : La variable %s n'existe pas.\n",$2);
                         exit;
                     }
                     else {
@@ -154,10 +152,10 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
                   }
      | tID tCRO tNB tCRF {int tailleTableau = getNbVals($1);
                           if (getFromTable($1) == -1) {
-                              printf("\nFatal Error : Variable not found\n");
+                              printf("\nERREUR : La variable %s n'existe pas.\n",$1);
                           }
                           else if ($3 < 0 || $3 >= tailleTableau) {
-                              printf("\nERREUR : Vous accédez à une case mémoire qui n'appartient pas à la variable %s",$1);
+                              printf("\nERREUR : Vous accédez à une case mémoire qui n'appartient pas à la variable %s.",$1);
                           }
                           else ass_cop(addTemp(),getFromTable($1)+$3);}
      | tSUB tPO Expr tPF %prec tMUL {$$ = -$3;};
@@ -180,36 +178,32 @@ Affect : tID tEQU Expr tPV {ass_cop(getFromTable($1),getTemp(1)); suppTemp(1);}
        | tMUL tID tEQU Expr tPV {ass_cop(getFromTable($2),getTemp(1)); suppTemp(1);}
        | tID tCRO tNB tCRF tEQU Expr tPV {int tailleTableau = getNbVals($1);
                             if (getFromTable($1) == -1) {
-                                printf("\nFatal Error : Variable not found\n");
+                                printf("\nERREUR : La variable %s n'existe pas.\n",$1);
                             }
                             else if ($3 < 0 || $3 >= tailleTableau) {
                                 printf("\nERREUR : Vous accédez à une case mémoire qui n'appartient pas à la variable %s",$1);
                             }
-                            else ass_cop(getFromTable($1)+$3,getTemp(1)); printf("suppTemp");suppTemp(1);
+                            else ass_cop(getFromTable($1)+$3,getTemp(1));suppTemp(1);
                             };
 
 %%
 int yyerror(char *s) {
-    fprintf(stdout, "\nFatal Error de Syntaxe de la Mort : %s\n", s);
+    fprintf(stdout, "\nErreur de Syntaxe de la Mort : %s\n", s);
     return 0;
 }
 
 void main() {
+    // Première génération de l'assembleur
     FILE * pFile=fopen("outAssembleur","w");
-
     initTable(pFile);
     initTableLabels(pFile);
     initTableFonctions(pFile);
     yyparse();
-    /*finalizeTable();
-    finalizeTableLabels();*/
     fclose(pFile);
 
+    // Seconde passe sur l'assembleur afin de remplacer les labels
     pFile=fopen("outAssembleur","r+");
     remplacerLabels(pFile);
-    // Faire la seconde passe sur l'assembleur
     fprintf(pFile, "END");
     fclose(pFile);
-
-    printfonctions();
 }

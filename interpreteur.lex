@@ -21,8 +21,5 @@ PRI        {return tPRI;}
 END        {return tEND;}
 @	   {}
 {NB}       {yylval.integer = atoi(yytext); return tNB;}
-^.        {return tLABEL;}
-"IF"{NB}  {yylval.integer = atoi(yytext); return tIF;}
-"WHILE"{NB}  {yylval.integer = atoi(yytext); return tWHILE;}
 
 %%

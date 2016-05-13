@@ -5,17 +5,19 @@ FILE * pFile;
 int nb_lignes = 0;
 
 int initTable(FILE * fichier) {
-  pFile = fichier;
-  pointeur = 1;
-  return 0;
+    pFile = fichier;
+    pointeur = 1;
+    return 0;
 }
 
 int getTemp(int i) {
-  if (i>=pointeur) {
-    return -1; //retourner une erreur plutot
-  } else {
-    return pointeur-i;
-  }
+    if (i>=pointeur) {
+        printf("ERREUR: getTemp trop bas !");
+        return -1; //retourner une erreur plutot
+    }
+    else {
+        return pointeur-i;
+    }
 }
 
 int putInTable(char * pname, int pinit, int pconst, int nb_valeurs) {
@@ -78,12 +80,13 @@ int addTemp() {
 }
 
 int suppTemp(int i) {
-  if (i>=pointeur) {
-    return -1;
-  } else {
-    pointeur-=i;
-    return 0;
-  }
+    if (i>=pointeur) {
+        return -1;
+    }
+    else {
+        pointeur-=i;
+        return 0;
+    }
 }
 
 int ass_add(int adr_result, int adr_op1, int adr_op2) {
