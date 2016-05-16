@@ -25,6 +25,7 @@ int main() {
     printf(tab[1]);
 }
 
+/*** TEST TABLE DES SYMBOLES ***/
 /*int main() {
     int i,j,k,r;
     i = 3;
@@ -38,13 +39,18 @@ int main() {
     r = r / j;
     printf(r);
 }*/
-    /*
-    { int i,j,k,r;
-        i = 3;
-        j = 4;
-        k = 8;
-        printf(i);
-        r = (i + j)* (i + k / j);
-        printf(r);
-    }
-    */
+
+/*** TEST TABLE DES LABELS ***/
+
+
+/*** TEST POINTEURS ***/
+/*int main() {
+    int a;
+    a = 42;
+    a = a + 1;
+    int * j;
+    j = &a;
+    printf(j);
+}*/
+
+/*** TEST TABLEAUX ***/
