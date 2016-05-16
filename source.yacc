@@ -153,7 +153,6 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
                  }}
      | tESPER tID {if (getFromTable($2) == -1) {
                       printf("\nERREUR : La variable %s n'existe pas.\n",$2);
-                      exit;
                   }
                   else {
                       int adresse = getFromTable($2);
