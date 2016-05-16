@@ -102,14 +102,17 @@ Instrs : If Instrs
        | Body
        | ;
 
-If : tIF tPO Cond tPF {char * nom = ".IF"; char nomLabel[10]; sprintf(nomLabel,"%s%d",nom, nb_if); ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelIf(nb_lignes-1);};
+If : tIF tPO Cond tPF {char * nom = ".IF";
+                       char nomLabel[10];
+                       sprintf(nomLabel,"%s%d",nom, nb_if);
+                       ass_jmf(getTemp(1), nomLabel);} Body {ajouterLabelIf(nb_lignes-1);};
 
 While : tWHILE tPO Cond tPF {char * nom = ".WHILE";
                              sprintf(nomLabel,"%s%d",nom, nb_while);
                              ass_jmf(getTemp(1), nomLabel);
                              memmove (nomLabel, nomLabel+1, strlen (nomLabel+1) + 1); //Supprime le "."
                              ajouterLabelWhile(nomLabel,nb_lignes-2);} Body {ajouterFinWhile(nomLabel, nb_lignes);
-                                                                                 ass_jmp(getLigneDebutWhile(nomLabel));};
+                                                                             ass_jmp(getLigneDebutWhile(nomLabel));};
 
 Print : tPRINT tPO tGUI Text tGUI tPF tPV
       | tPRINT tPO tID tPF tPV {ass_pri(getFromTable($3));}
