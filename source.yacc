@@ -138,18 +138,27 @@ Expr : Expr tADD Expr {ass_add(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | Expr tDIV Expr {ass_div(getTemp(2),getTemp(2),getTemp(1)); suppTemp(1);}
      | tPO Expr tPF {$$ = $2;}
      | tNB {ass_afc(addTemp(),$1);}
-     | tID {if (getFromTable($1) == -1){printf("\nERREUR : La variable %s n'existe pas.\n",$1); exit;} ass_cop(addTemp(),getFromTable($1));}
-     | tMUL tID {if (getFromTable($2) == -1){printf("\nERREUR : La variable %s n'existe pas.\n",$2); exit;} char * varPointee = getFromTableByAddr(getFromTable($2)); ass_cop(addTemp(),getFromTable(varPointee));}
-     | tESPER tID { int adresse;
-                    if (getFromTable($2) == -1) {
-                        printf("\nERREUR : La variable %s n'existe pas.\n",$2);
-                        exit;
-                    }
-                    else {
-                        adresse = getFromTable($2);
-                    }
-                    ass_cop(addTemp(),adresse);
+     | tID {if (getFromTable($1) == -1) {
+              printf("\nERREUR : La variable %s n'existe pas.\n",$1);
+            }
+            else {
+              ass_cop(addTemp(),getFromTable($1));
+            }}
+     | tMUL tID {if (getFromTable($2) == -1) {
+                    printf("\nERREUR : La variable %s n'existe pas.\n",$2);
+                 }
+                 else {
+                    char * varPointee = getFromTableByAddr(getFromTable($2));
+                    ass_cop(addTemp(),getFromTable(varPointee));
+                 }}
+     | tESPER tID {if (getFromTable($2) == -1) {
+                      printf("\nERREUR : La variable %s n'existe pas.\n",$2);
+                      exit;
                   }
+                  else {
+                      int adresse = getFromTable($2);
+                      ass_cop(addTemp(),adresse);
+                  }}
      | tID tCRO tNB tCRF {int tailleTableau = getNbVals($1);
                           if (getFromTable($1) == -1) {
                               printf("\nERREUR : La variable %s n'existe pas.\n",$1);
