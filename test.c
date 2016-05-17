@@ -4,13 +4,13 @@
     i = 3;
     j = 4;
     k = 8;
-    printf(i);
+    printf(i); // Attendu : 3
     r = i + j * i + (k - j)/j;
-    printf(r);
+    printf(r); // Attendu : 16
     j = k;
-    printf(j);
+    printf(j); // Attendu : 8
     r = r / j;
-    printf(r);
+    printf(r); // Attendu : 2
 }*/
 
 /*** TEST TABLE DES LABELS ***/
@@ -20,17 +20,17 @@
     a = a + 1;
     int b = 42;
     if (0 == 0) {
-        printf(a);
+        printf(a); // Affiche 5
     }
-    if (0 != 0) {
-      printf(b);
+    if (0 == 1) {
+      printf(b); // N'est pas exécuté
     }
     int i = 0;
     while (i < a) {
         i = i + 1;
-        printf(i);
+        printf(i); // Afficher de 1 jusqu'à 5
     }
-    printf(a);
+    printf(a); // Affiche 5
 }*/
 
 /*** TEST POINTEURS ***/
@@ -40,7 +40,9 @@
     a = a + 1;
     int * j;
     j = &a;
-    printf(j);
+    printf(*j); // Affiche 43
+    *j = 8;
+    printf(*j); // Affiche 8
 }*/
 
 /*** TEST TABLEAUX ***/
@@ -49,9 +51,5 @@
   tab[0] = 1994;
   tab[9] = 2000;
   tab[1] = tab[0] + 1;
-  printf(tab[1]);
-  tab[4] = 128;
-  int i = 4
-  tab[i] = tab[i] + i;
-  printf(i);
+  printf(tab[1]); // Affiche 1995
 }*/
